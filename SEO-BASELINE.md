@@ -1,8 +1,10 @@
 # SEO-BASELINE.md — Launch Baseline State
 
-Data de lançamento do domíno de produção: **9 de agosto de 2026**.
+Data de lançamento do domínio de produção: **9 de agosto de 2026**.
 
 ## 1. Origem Única de Produção
+- **Repositório GitHub:** `https://github.com/amsterwabadub/calculadorair`
+- **Branch:** `main`
 - **Domínio Principal:** `https://calculadorair.online`
 - **Variante WWW:** Redirect `https://www.calculadorair.online` -> `https://calculadorair.online`
 - **Sitemap URL:** `https://calculadorair.online/sitemap.xml`
