@@ -1,0 +1,31 @@
+country,country_code,rank,opportunity_name,product_type,target_head_query,estimated_monthly_volume,mvp_build_hours,primary_monetization,estimated_revenue_per_100k,score,final_verdict
+Brazil,BR,1,Calculadora IRPF 2026 & Simulador da Reforma,Interactive Web Calculator & Tax Table,calculadora imposto de renda 2026,300000,36,Display Ads + Accountant Lead Gen,$850,94,BUILD NOW
+Brazil,BR,2,Portal Transição IBS/CBS 2026,Informational Portal & B2B Calculator,aliquota ibs cbs 2026,45000,48,B2B Lead Gen,"$1,200",68,WATCH
+Brazil,BR,3,Guia DAS-MEI 2026,Informational Table & Calculator,valor das mei 2026,120000,24,Display Ads,$450,52,DROP
+Brazil,BR,4,Assistente FGTS Digital eSocial,Guide & Template Generator,fgts digital como pagar pix,65000,40,Display Ads,$500,55,DROP
+Brazil,BR,5,Portal Agendamento CIN Guia,State Portal Directory,agendamento cin 2026,210000,24,Display Ads,$250,48,DROP
+Mexico,MX,1,Calculadora Aguinaldo Neto ISR 2026,Interactive Payroll Calculator,calculadora aguinaldo neto 2026,140000,36,Display Ads + HR Software Affiliates,$650,88,VALIDATE
+Mexico,MX,2,Tablas ISR SAT 2026 & Calculadora,Tax Table Lookup & Calculator,tablas isr 2026 sat,180000,30,Display Ads,$550,74,WATCH
+Mexico,MX,3,Calculador de Cuotas Patronales IMSS 2026,Employer Cost Matrix Calculator,tabla cuotas patronales imss 2026,55000,40,B2B Payroll Leads,$750,70,WATCH
+Mexico,MX,4,Guia Tramite CURP Biometrica,Module Locator Guide,curp biometrica requisitos citas 2026,95000,24,Display Ads,$300,50,DROP
+Mexico,MX,5,Portal Citas REPUVE Guia,VIN Verification Guide,regularizacion autos chocolate 2026 citas repuve,85000,36,Display Ads,$400,52,DROP
+Colombia,CO,1,Calculadora ReteFuente DIAN 2026,Tax Withholding Estimator,calculadora retencion en la fuente 2026 colombia,125000,32,Display Ads + Accounting Tools,$600,86,VALIDATE
+Colombia,CO,2,Calculadora Jornada Laboral 42 Horas,Overtime & Hourly Rate Calculator,calculo hora ordinaria y recargo 2026 colombia,110000,36,Display Ads + HR Legal Leads,$550,84,WATCH
+Colombia,CO,3,Verificador POS Electrónico DIAN,SME Invoicing Compliance Tool,pos electronico 5 uvt dian 2026,40000,48,B2B POS Affiliates,$900,60,DROP
+Colombia,CO,4,Simulador Reforma Pensional 2026,Pension Transition Calculator,reforma pensional colombia simulador 2026,90000,40,Display Ads,$500,60,DROP
+Colombia,CO,5,Calculadora SOAT e Impuesto Vehículos,Rate Lookup & Directory,tarifas soat 2026 motos y carros,160000,24,Display Ads,$400,52,DROP
+Nigeria,NG,1,Nigeria Tax Act & PAYE Calculator 2026,Tax & Exemption Estimator,paye tax calculator nigeria 2026,95000,40,Display Ads + SaaS Referral,$450,80,WATCH
+Nigeria,NG,2,Nigeria Minimum Wage Net Pay Calculator,Interactive Payslip Breakdown,70000 minimum wage salary structure calculator nigeria,75000,24,Display Ads,$400,78,WATCH
+Nigeria,NG,3,WHT Deduction Rate Lookup Tool,B2B Rate Calculator,wht rates in nigeria 2026 pdf,50000,30,Display Ads,$500,66,DROP
+Nigeria,NG,4,CAC Compliance Status & Penalty Estimator,Status Guide & Calculator,cac annual returns filing fee 2026,80000,24,Display Ads,$350,54,DROP
+Nigeria,NG,5,PenCom RSA Withdrawal & Contribution Calculator,Pension Estimator,pencom pension contribution calculator nigeria 2026,60000,32,Display Ads,$450,52,DROP
+Kenya,KE,1,Kenya Net Payslip Calculator (SHIF + Housing Levy),Interactive Payroll Deductions Calculator,shif deduction calculator kenya 2026,130000,36,Display Ads + HR Affiliates,$600,82,VALIDATE
+Kenya,KE,2,Calculadora NSSF Tier I/II Kenya,Pension Contribution Scale Tool,nssf rates table 2026 kenya,70000,30,Display Ads,$450,65,DROP
+Kenya,KE,3,Guia Invoicing KRA eTIMS,Step-by-Step Guide,etims kra registration process 2026,110000,24,Display Ads,$500,58,DROP
+Kenya,KE,4,KRA TCC Instant Troubleshooting Guide,iTax TCC Guide,how to apply for kra tcc on itax 2026,95000,24,Display Ads,$350,52,DROP
+Kenya,KE,5,Portal Tracking Maisha Card eCitizen,eCitizen Portal Guide,maisha card application on ecitizen 2026,85000,24,Display Ads,$250,50,DROP
+Morocco,MA,1,Calculateur Salaire Net & IR Maroc 2026,Interactive Net Salary & Tax Calculator,calculateur salaire net maroc 2026,160000,36,Display Ads + HR Software Ads,$700,86,VALIDATE
+Morocco,MA,2,Annuaire Taux TVA DGI Maroc,Product Classification & Rate Finder,taux tva maroc 2026 liste produits,45000,32,Display Ads,$500,66,DROP
+Morocco,MA,3,Simulateur Impôt & CNSS Auto-Entrepreneur,Turnover & Healthcare Calculator,declaration chiffre d affaires auto entrepreneur maroc 2026,70000,24,Display Ads,$400,56,DROP
+Morocco,MA,4,Calculateur Vignette Auto Maroc 2026,Fiscal HP Rate Tool,prix vignette auto maroc 2026 par puissance fiscale,130000,24,Display Ads,$350,50,DROP
+Morocco,MA,5,Guide Consultation Indice RSU,Eligibility Score Guide,consultation indice rsu maroc 2026,180000,24,Display Ads,$200,45,DROP

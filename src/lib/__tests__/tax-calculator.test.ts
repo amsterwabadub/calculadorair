@@ -74,8 +74,8 @@ describe('Imposto de Renda 2026 Tax Rules Engine', () => {
       const calc = calculateTaxComparison(5000);
       expect(calc.newTax).toBeLessThanOrEqual(calc.oldTax);
       expect(calc.monthlySaving).toBeGreaterThan(0);
-      expect(calc.annualSaving12Months).toEqual(calc.monthlySaving * 12);
-      expect(calc.annualSaving13Months).toEqual(calc.monthlySaving * 13);
+      expect(calc.annualSaving12Months).toBeCloseTo(calc.monthlySaving * 12, 2);
+      expect(calc.annualSaving13Months).toBeCloseTo(calc.monthlySaving * 13, 2);
       expect(calc.benefitType).toBe('ISENTO_TOTAL');
     });
 

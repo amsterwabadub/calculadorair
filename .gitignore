@@ -32,3 +32,7 @@ dual-killer-check/
 # OS
 .DS_Store
 Thumbs.db
+
+# Scratch
+scratch/
+

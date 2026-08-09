@@ -1,305 +1,210 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { calculateTaxComparison, formatBRL, TaxCalculationResult } from '@/lib/tax-calculator';
-import { analytics, getSalaryBand, getSavingBand } from '@/lib/analytics';
+import React, { useState, useEffect, useId } from 'react';
+import { usePathname } from 'next/navigation';
+import { CalculationResult } from '@/types/calculator';
+import { getCalculatorConfigByCountry } from '@/config/calculators';
+import {
+  trackCalculatorView,
+  trackCalculatorStart,
+  trackCalculatorComplete,
+  trackResultView,
+  trackShareResult,
+} from '@/lib/analytics';
 
 interface CalculatorProps {
-  initialSalary?: number;
-  autoFocus?: boolean;
+  countryCode: 'ke' | 'mx' | 'ma' | 'co';
 }
 
-export default function Calculator({ initialSalary = 6000, autoFocus = false }: CalculatorProps) {
-  const [salaryInput, setSalaryInput] = useState<string>(initialSalary ? String(initialSalary) : '6000');
-  const [dependents, setDependents] = useState<number>(0);
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
-  const [hasInteracted, setHasInteracted] = useState<boolean>(false);
-  const [result, setResult] = useState<TaxCalculationResult>(() => calculateTaxComparison(initialSalary, { dependents }));
+export default function Calculator({ countryCode }: CalculatorProps) {
+  const config = getCalculatorConfigByCountry(countryCode);
+  const baseId = useId();
+  const pathname = usePathname() || `/${countryCode}/`;
 
-  const presets = [3000, 4000, 5000, 5500, 6000, 7000, 8000, 10000];
-
-  const handleSalaryChange = (val: string) => {
-    // Clean non-numeric input except digits and comma/dot
-    const cleanVal = val.replace(/[^0-9.,]/g, '');
-    setSalaryInput(cleanVal);
-
-    if (!hasInteracted) {
-      setHasInteracted(true);
-      analytics.trackCalculatorStart();
-    }
-  };
-
-  const parsedSalary = parseFloat(salaryInput.replace(/\./g, '').replace(',', '.')) || 0;
-
-  useEffect(() => {
-    const res = calculateTaxComparison(parsedSalary, { dependents });
-    setResult(res);
-
-    if (parsedSalary > 0) {
-      analytics.trackCalculatorComplete({
-        salaryBand: getSalaryBand(parsedSalary),
-        savingBand: getSavingBand(res.monthlySaving),
-        benefitType: res.benefitType,
+  // Initialize state with default values (called unconditionally at top level)
+  const [inputs, setInputs] = useState<Record<string, any>>(() => {
+    const initial: Record<string, any> = {};
+    if (config) {
+      config.inputs.forEach((field) => {
+        initial[field.id] = field.defaultValue;
       });
     }
-  }, [parsedSalary, dependents]);
+    return initial;
+  });
 
-  const handlePresetClick = (presetVal: number) => {
-    setSalaryInput(String(presetVal));
-    if (!hasInteracted) {
-      setHasInteracted(true);
-      analytics.trackCalculatorStart();
+  const [hasStarted, setHasStarted] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Compute calculation result if config exists
+  const result: CalculationResult | null = config ? config.calculate(inputs) : null;
+
+  // Track initial page view on mount
+  useEffect(() => {
+    if (config) {
+      trackCalculatorView(config.countryCode, config.id, pathname);
     }
+  }, [config, pathname]);
+
+  // Track initial interaction and completion
+  const handleInputChange = (fieldId: string, value: any) => {
+    if (!config) return;
+    if (!hasStarted) {
+      setHasStarted(true);
+      trackCalculatorStart(config.countryCode, config.id, pathname);
+    }
+    setInputs((prev) => ({ ...prev, [fieldId]: value }));
+  };
+
+  useEffect(() => {
+    if (config && result && result.heroOutput) {
+      trackCalculatorComplete(config.countryCode, config.id, pathname);
+      trackResultView(config.countryCode, config.id, pathname);
+    }
+  }, [inputs, config, result, pathname]);
+
+  if (!config || !result) {
+    return <div className="calc-error">Calculator configuration not found for {countryCode}.</div>;
+  }
+
+  const handleCopyResults = () => {
+    const summary = `${config.name}\n${result.heroOutput.label}: ${result.heroOutput.formattedValue}\nCalculated at https://regulo.online`;
+    navigator.clipboard.writeText(summary);
+    setCopied(true);
+    trackShareResult(config.countryCode, config.id, pathname);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Input Card */}
-      <div className="card" style={{ padding: '2rem' }}>
-        <label
-          htmlFor="salario-bruto-input"
-          style={{ display: 'block', fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-brand-primary)' }}
-        >
-          Informe seu salário mensal bruto (R$)
-        </label>
+    <div className="calculator-widget">
+      <div className="calc-header-badge">
+        <span className="live-dot"></span> 2026 Statutory Rules Active ({config.countryName})
+      </div>
 
-        <div style={{ position: 'relative', marginBottom: '1rem' }}>
-          <span
-            style={{
-              position: 'absolute',
-              left: '1.25rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              color: 'var(--color-text-muted)',
-            }}
-          >
-            R$
-          </span>
-          <input
-            id="salario-bruto-input"
-            type="text"
-            className="input-field"
-            style={{ paddingLeft: '3.75rem' }}
-            value={salaryInput}
-            onChange={(e) => handleSalaryChange(e.target.value)}
-            placeholder="Ex: 5000"
-            autoFocus={autoFocus}
-          />
-        </div>
+      <div className="calc-grid">
+        {/* Input Form Column */}
+        <div className="calc-form-card">
+          <h2 className="calc-section-title">Enter Income Details</h2>
+          <div className="form-fields-container">
+            {config.inputs.map((field) => {
+              const fieldInputId = `${baseId}-${field.id}`;
+              return (
+                <div key={field.id} className="form-group">
+                  <label htmlFor={fieldInputId} className="field-label">
+                    {field.label}
+                  </label>
 
-        {/* Quick Preset Buttons */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-            Exemplos rápidos:
-          </span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {presets.map((p) => (
-              <button
-                key={p}
-                type="button"
-                className="btn btn-outline"
-                style={{
-                  padding: '0.375rem 0.75rem',
-                  fontSize: '0.85rem',
-                  backgroundColor: parsedSalary === p ? 'var(--color-brand-primary)' : 'transparent',
-                  color: parsedSalary === p ? '#ffffff' : 'var(--color-text-main)',
-                  borderColor: parsedSalary === p ? 'var(--color-brand-primary)' : 'var(--color-border-subtle)',
-                }}
-                onClick={() => handlePresetClick(p)}
-              >
-                R$ {p.toLocaleString('pt-BR')}
-              </button>
-            ))}
+                  {field.type === 'currency' || field.type === 'number' ? (
+                    <div className="input-wrapper">
+                      {field.prefix && <span className="input-prefix">{field.prefix}</span>}
+                      <input
+                        id={fieldInputId}
+                        type="number"
+                        min={field.min ?? 0}
+                        max={field.max}
+                        step={field.step ?? 1}
+                        value={inputs[field.id] ?? ''}
+                        onChange={(e) => handleInputChange(field.id, e.target.value)}
+                        className="calc-input"
+                        placeholder="0"
+                      />
+                      {field.suffix && <span className="input-suffix">{field.suffix}</span>}
+                    </div>
+                  ) : field.type === 'select' ? (
+                    <select
+                      id={fieldInputId}
+                      value={inputs[field.id]}
+                      onChange={(e) => handleInputChange(field.id, e.target.value)}
+                      className="calc-select"
+                    >
+                      {field.options?.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === 'boolean' ? (
+                    <div className="checkbox-wrapper">
+                      <label className="toggle-label">
+                        <input
+                          id={fieldInputId}
+                          type="checkbox"
+                          checked={Boolean(inputs[field.id])}
+                          onChange={(e) => handleInputChange(field.id, e.target.checked)}
+                          className="toggle-checkbox"
+                        />
+                        <span className="toggle-text">Enable Deduction</span>
+                      </label>
+                    </div>
+                  ) : null}
+
+                  {field.helpText && <p className="field-help">{field.helpText}</p>}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Advanced Options Accordion */}
-        <div style={{ borderTop: '1px solid var(--color-border-subtle)', paddingTop: '1rem' }}>
-          <button
-            type="button"
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--color-brand-accent)',
-              fontWeight: 600,
-              fontSize: '0.9rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.375rem',
-            }}
-            onClick={() => setShowAdvanced(!showAdvanced)}
-          >
-            <span>{showAdvanced ? '▼' : '►'}</span>
-            <span>Configurações avançadas (dependentes, INSS)</span>
-          </button>
+        {/* Output Results Column */}
+        <div className="calc-result-card">
+          {/* Hero Result Banner */}
+          <div className="hero-result-banner">
+            <span className="hero-label">{result.heroOutput.label}</span>
+            <div className="hero-value">{result.heroOutput.formattedValue}</div>
+            {result.heroOutput.description && (
+              <p className="hero-desc">{result.heroOutput.description}</p>
+            )}
 
-          {showAdvanced && (
-            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
-              <div>
-                <label htmlFor="dependents-select" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-                  Número de dependentes
-                </label>
-                <select
-                  id="dependents-select"
-                  value={dependents}
-                  onChange={(e) => setDependents(Number(e.target.value))}
-                  style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-subtle)', width: '100%', maxWidth: '200px' }}
+            <button onClick={handleCopyResults} className="btn-copy">
+              {copied ? '✓ Copied Summary' : '📋 Copy Results'}
+            </button>
+          </div>
+
+          {/* Breakdown Table */}
+          <div className="breakdown-container">
+            <h3 className="breakdown-title">Itemized Pay & Deduction Breakdown</h3>
+            <div className="breakdown-list">
+              {result.breakdown.map((item) => (
+                <div
+                  key={item.id}
+                  className={`breakdown-row ${item.type === 'highlight' ? 'row-highlight' : ''}`}
                 >
-                  <option value={0}>Nenhum dependente</option>
-                  <option value={1}>1 dependente (-R$ 189,59)</option>
-                  <option value={2}>2 dependentes (-R$ 379,18)</option>
-                  <option value={3}>3 dependentes (-R$ 568,77)</option>
-                  <option value={4}>4 ou mais dependentes</option>
-                </select>
-              </div>
+                  <div className="item-info">
+                    <span className="item-label">{item.label}</span>
+                    {item.description && <span className="item-desc">{item.description}</span>}
+                  </div>
+                  <span className={`item-value val-${item.type || 'neutral'}`}>
+                    {item.formattedValue}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Employer Cost Section if present */}
+          {result.employerCost && (
+            <div className="employer-cost-box">
+              <h4 className="employer-cost-title">Employer Total Cost</h4>
+              <div className="employer-total-val">{result.employerCost.formattedTotal}</div>
+              <ul className="employer-list">
+                {result.employerCost.items.map((emp, idx) => (
+                  <li key={idx}>
+                    <span>{emp.label}:</span> <strong>{emp.formattedValue}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Notes */}
+          {result.notes && (
+            <div className="result-notes">
+              {result.notes.map((note, idx) => (
+                <p key={idx}>• {note}</p>
+              ))}
             </div>
           )}
         </div>
       </div>
-
-      {/* Results Section */}
-      {parsedSalary > 0 && (
-        <div className="card card-hero-result" style={{ padding: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-            <div>
-              <span className="text-muted" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
-                Resultado do Cálculo IR 2026
-              </span>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-brand-primary)', marginTop: '0.25rem' }}>
-                {result.monthlySaving > 0 ? (
-                  <>Sua economia estimada: <span className="text-emerald">{formatBRL(result.monthlySaving)} / mês</span></>
-                ) : (
-                  <>Imposto mantido sem alteração</>
-                )}
-              </h2>
-            </div>
-
-            <div>
-              {result.benefitType === 'ISENTO_TOTAL' && <span className="badge badge-isento">🎉 Isenção Total 2026</span>}
-              {result.benefitType === 'REDUCAO_PARCIAL' && <span className="badge badge-reducao">📉 Redução Gradual 2026</span>}
-              {result.benefitType === 'FORA_DO_BENEFICIO' && <span className="badge badge-padrao">⚖️ Tabela Padrão</span>}
-            </div>
-          </div>
-
-          {/* Hero Savings Breakdown */}
-          <div
-            style={{
-              backgroundColor: result.monthlySaving > 0 ? 'var(--color-emerald-bg)' : '#f1f5f9',
-              border: `1px solid ${result.monthlySaving > 0 ? 'var(--color-emerald-border)' : '#cbd5e1'}`,
-              borderRadius: 'var(--radius-md)',
-              padding: '1.5rem',
-              marginBottom: '2rem',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '1.5rem',
-              textAlign: 'center',
-            }}
-          >
-            <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, display: 'block' }}>
-                Economia Mensal
-              </span>
-              <strong style={{ fontSize: '2rem', color: result.monthlySaving > 0 ? 'var(--color-emerald-heading)' : 'var(--color-text-main)' }}>
-                {formatBRL(result.monthlySaving)}
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, display: 'block' }}>
-                Economia Anual (12 meses)
-              </span>
-              <strong style={{ fontSize: '2rem', color: result.monthlySaving > 0 ? 'var(--color-emerald-heading)' : 'var(--color-text-main)' }}>
-                {formatBRL(result.annualSaving12Months)}
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, display: 'block' }}>
-                Economia com 13º Salário
-              </span>
-              <strong style={{ fontSize: '2rem', color: result.monthlySaving > 0 ? 'var(--color-emerald-heading)' : 'var(--color-text-main)' }}>
-                {formatBRL(result.annualSaving13Months)}
-              </strong>
-            </div>
-          </div>
-
-          {/* Comparison Grid */}
-          <div className="grid-2" style={{ marginBottom: '2rem' }}>
-            <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border-subtle)' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
-                Antes das novas regras (2025)
-              </span>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.5rem', color: '#dc2626' }}>
-                {formatBRL(result.oldTax)} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--color-text-muted)' }}>/mês</span>
-              </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-                Alíquota efetiva: {result.oldEffectiveRate}%
-              </div>
-            </div>
-
-            <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-emerald-border)' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-emerald-text)', fontWeight: 700, textTransform: 'uppercase' }}>
-                Com as regras de 2026
-              </span>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.5rem', color: 'var(--color-emerald-heading)' }}>
-                {formatBRL(result.newTax)} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--color-text-muted)' }}>/mês</span>
-              </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-                Alíquota efetiva: {result.newEffectiveRate}%
-                {result.reducerAmount > 0 && ` (Redutor aplicado: -${formatBRL(result.reducerAmount)})`}
-              </div>
-            </div>
-          </div>
-
-          {/* Context Explanation */}
-          <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--color-brand-accent)', marginBottom: '2rem' }}>
-            <p style={{ fontSize: '0.95rem', color: 'var(--color-text-main)', lineHeight: '1.6' }}>
-              💡 <strong>Entenda seu resultado:</strong> {result.explanation}
-            </p>
-          </div>
-
-          {/* Monetization CTA */}
-          <div
-            style={{
-              backgroundColor: '#f8fafc',
-              border: '1px dashed var(--color-border-hover)',
-              borderRadius: 'var(--radius-md)',
-              padding: '1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-              gap: '1rem',
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-brand-primary)' }}>
-                Precisa de ajuda com sua declaração de Imposto de Renda?
-              </h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-                Tire suas dúvidas ou faça sua declaração com um contador especialista parceiro.
-              </p>
-            </div>
-
-            <Link
-              href="/contador"
-              className="btn btn-emerald"
-              onClick={() => analytics.trackAccountantCtaClick('calculator_result')}
-            >
-              🤝 Encontrar um contador parceiro
-            </Link>
-          </div>
-
-          {/* Disclaimer */}
-          <p style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', marginTop: '1.5rem', textAlign: 'center' }}>
-            {result.disclaimer}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

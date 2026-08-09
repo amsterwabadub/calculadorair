@@ -1,43 +1,35 @@
 import { MetadataRoute } from 'next';
+import { CALCULATOR_CONFIGS } from '@/config/calculators';
+import { COUNTRIES } from '@/config/countries';
+import { CalculatorConfig, PageSEO } from '@/types/calculator';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://calculadorair.online';
+  const baseUrl = 'https://regulo.online';
 
-  const salaries = [3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7350, 8000, 9000, 10000, 12000, 15000, 20000];
+  const calculatorUrls: MetadataRoute.Sitemap = Object.values(CALCULATOR_CONFIGS).flatMap((config: CalculatorConfig) => {
+    const primarySlug = COUNTRIES[config.countryCode]?.primarySlug;
+    return Object.values(config.pages).map((page: PageSEO) => ({
+      url: `${baseUrl}/${config.countryCode}/${page.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: page.slug === primarySlug ? 1.0 : 0.8,
+    }));
+  });
 
-  const salaryEntries: MetadataRoute.Sitemap = salaries.map((s) => ({
-    url: `${baseUrl}/imposto-de-renda-salario-${s}`,
-    lastModified: new Date('2026-08-09'),
-    changeFrequency: 'monthly',
-    priority: s >= 5000 && s <= 8000 ? 0.9 : 0.8,
-  }));
-
-  const guideEntries: MetadataRoute.Sitemap = [
-    'nova-tabela-imposto-de-renda-2026',
-    'isencao-imposto-de-renda-2026',
-    'calculadora-irrf-2026',
-    'quanto-vou-economizar-imposto-de-renda-2026',
-  ].map((slug) => ({
-    url: `${baseUrl}/${slug}`,
-    lastModified: new Date('2026-08-09'),
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  }));
-
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date('2026-08-09'),
-      changeFrequency: 'daily',
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/contador`,
-      lastModified: new Date('2026-08-09'),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      url: `${baseUrl}/politica-de-privacidade`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
     },
-    ...guideEntries,
-    ...salaryEntries,
   ];
+
+  return [...staticPages, ...calculatorUrls];
 }

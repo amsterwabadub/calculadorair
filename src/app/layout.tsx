@@ -5,34 +5,38 @@ import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://calculadorair.online'),
+  metadataBase: new URL('https://regulo.online'),
   title: {
-    default: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
-    template: '%s | Calculadora IR 2026',
+    default: 'Regulo — Global Statutory & Payroll Calculators 2026',
+    template: '%s | Regulo',
   },
-  description: 'Simulador gratuito e atualizado do Imposto de Renda 2026 (Lei nº 15.270/2025). Descubra quanto vai economizar por mês e por ano com a nova tabela e isenção até R$ 5.000.',
+  description:
+    'Instant, accurate, and localized statutory administrative calculators for Kenya, Mexico, Morocco, and Colombia updated for 2026 tax regulations.',
   keywords: [
-    'calculadora imposto de renda 2026',
-    'nova tabela imposto de renda 2026',
-    'isencao imposto de renda 5000',
-    'quanto vou economizar imposto de renda',
-    'simulador irrf 2026',
+    'regulo',
+    'regulo online',
+    'kenya net salary calculator 2026',
+    'aguinaldo neto calculadora mexico 2026',
+    'calculateur salaire net maroc 2026',
+    'retencion en la fuente calculadora colombia 2026',
+    'statutory tax calculator',
   ],
-  authors: [{ name: 'Calculadora Imposto de Renda Brasil' }],
+  authors: [{ name: 'Regulo Regulatory Engine' }],
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: 'https://calculadorair.online',
+    canonical: 'https://regulo.online',
   },
   openGraph: {
     type: 'website',
-    locale: 'pt_BR',
-    url: 'https://calculadorair.online',
-    title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
-    description: 'Informe seu salário e descubra instantaneamente sua economia mensal e anual com as novas regras da Lei nº 15.270/2025.',
-    siteName: 'Calculadora Imposto de Renda 2026',
+    locale: 'en_US',
+    url: 'https://regulo.online',
+    title: 'Regulo — Global Statutory & Payroll Calculators 2026',
+    description:
+      'Localized statutory administrative calculators solving mandatory financial, tax, and employment questions worldwide.',
+    siteName: 'Regulo',
   },
 };
 
@@ -41,27 +45,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-KLNEN6LL8G';
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-REGULO2026';
 
   return (
-    <html lang="pt-BR">
-      <head>
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${gaId}');
-            `,
-          }}
-        />
-      </head>
+    <html lang="en">
       <body>
+        <GoogleAnalytics gaId={gaId} />
         <Header />
         <main>{children}</main>
         <Footer />

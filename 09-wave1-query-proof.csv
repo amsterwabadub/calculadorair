@@ -1,0 +1,141 @@
+country,country_code,candidate_opportunity,query_text,language,intent_type,semantic_cluster,estimated_monthly_demand_range,demand_confidence
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora aguinaldo neto 2026 mexico,es-MX,CALCULATOR,Aguinaldo Net Calculation,"ESTIMATED: 8,000–15,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,cuanto me descuentan de isr de aguinaldo,es-MX,CALCULATOR,ISR Bonus Deduction,"ESTIMATED: 6,000–12,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo aguinaldo exencion uma sat 2026,es-MX,CALCULATOR,UMA Exemption Limit,"ESTIMATED: 4,000–8,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora aguinaldo proporcional 2026,es-MX,CALCULATOR,Proportional Bonus,"ESTIMATED: 5,000–10,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,tabla exencion aguinaldo 30 umas 2026,es-MX,LOOKUP,UMA Exemption Limit,"ESTIMATED: 3,000–6,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,formula para calcular el aguinaldo neto,es-MX,CALCULATOR,Aguinaldo Net Calculation,"ESTIMATED: 4,500–9,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,cuanto es 15 dias de aguinaldo calculador,es-MX,CALCULATOR,15 Days Calculation,"ESTIMATED: 5,000–9,500/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,como calcular aguinaldo bruto a neto sat,es-MX,CALCULATOR,Gross to Net Conversion,"ESTIMATED: 3,500–7,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora aguinaldo trabajadores del hogar,es-MX,CALCULATOR,Domestic Workers,"ESTIMATED: 2,500–5,000/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo de aguinaldo con salario minimo 2026,es-MX,CALCULATOR,Minimum Wage Aguinaldo,"ESTIMATED: 4,000–7,500/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo aguinaldo articulo 174 rlisr,es-MX,CALCULATOR,Art 174 RLISR Smoothing,"ESTIMATED: 2,000–4,500/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora aguinaldo resico personas fisicas,es-MX,CALCULATOR,RESICO Aguinaldo,"ESTIMATED: 1,800–3,500/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo de ISR en gratificacion anual sat,es-MX,CALCULATOR,ISR Bonus Deduction,"ESTIMATED: 2,500–5,500/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora finiquito y aguinaldo mexico,es-MX,CALCULATOR,Severance & Aguinaldo,"ESTIMATED: 7,000–14,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,dias de aguinaldo ley federal del trabajo 2026,es-MX,LOOKUP,Legal Basis LFT,"ESTIMATED: 6,000–11,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,reforma aguinaldo 30 dias entra en vigor 2026,es-MX,CHECKER,30 Days Reform Status,"ESTIMATED: 9,000–18,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,cuanto me toca de aguinaldo por 6 meses,es-MX,CALCULATOR,Proportional Bonus,"ESTIMATED: 4,000–8,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,cuanto me toca de aguinaldo por 3 meses,es-MX,CALCULATOR,Proportional Bonus,"ESTIMATED: 3,500–6,500/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,como calcular aguinaldo si gano sueldo diario,es-MX,CALCULATOR,Daily Wage Calculation,"ESTIMATED: 2,500–4,800/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora prima vacacional y aguinaldo,es-MX,CALCULATOR,Vacation & Aguinaldo,"ESTIMATED: 3,800–7,200/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,simulador retencion isr aguinaldo sat,es-MX,CALCULATOR,ISR Bonus Deduction,"ESTIMATED: 2,200–4,500/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora de aguinaldo en excel gratis,es-MX,ACTION,Excel Template Search,"ESTIMATED: 3,000–6,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo aguinaldo comisionistas variables,es-MX,CALCULATOR,Commission Base,"ESTIMATED: 1,500–3,200/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,exencion de isr en aguinaldo 2026 pesos,es-MX,LOOKUP,UMA Exemption Limit,"ESTIMATED: 2,800–5,400/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,tope exento aguinaldo uma 2026 sat,es-MX,LOOKUP,UMA Exemption Limit,"ESTIMATED: 2,400–4,600/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo aguinaldo horas extras incluidas,es-MX,CALCULATOR,Overtime Base,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,como saber cuanto me van a dar de aguinaldo,es-MX,CHECKER,General Estimation,"ESTIMATED: 5,500–10,500/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora aguinaldo salario mixto,es-MX,CALCULATOR,Mixed Salary Base,"ESTIMATED: 1,200–2,800/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,como retener isr en aguinaldo nomina,es-MX,CALCULATOR,ISR Bonus Deduction,"ESTIMATED: 2,000–4,200/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,descuento de isr en aguinaldo formula sat,es-MX,CALCULATOR,ISR Bonus Deduction,"ESTIMATED: 2,200–4,600/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,fecha limite para recibir aguinaldo 2026,es-MX,CHECKER,Deadline Check,"ESTIMATED: 8,000–15,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,multa por no pagar aguinaldo patron stps,es-MX,CHECKER,Employer Sanction,"ESTIMATED: 2,500–5,000/month",MEDIUM
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculo aguinaldo despido injustificado,es-MX,CALCULATOR,Severance & Aguinaldo,"ESTIMATED: 3,200–6,400/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,calculadora de aguinaldo mexico gratis online,es-MX,CALCULATOR,Aguinaldo Net Calculation,"ESTIMATED: 4,000–8,000/month",HIGH
+Mexico,MX,Calculadora Aguinaldo Neto ISR 2026,simulador aguinaldo neto sin registro,es-MX,CALCULATOR,Aguinaldo Net Calculation,"ESTIMATED: 1,800–3,800/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retencion en la fuente 2026 colombia,es-CO,CALCULATOR,ReteFuente Main Tool,"ESTIMATED: 7,000–14,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,valor uvt 2026 retencion asalariados,es-CO,LOOKUP,UVT Rate Check,"ESTIMATED: 9,000–16,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,tabla retencion fuente dian 2026 art 383,es-CO,LOOKUP,Art 383 Table,"ESTIMATED: 5,000–10,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculo retencion de renta personas naturales,es-CO,CALCULATOR,Income Tax Withholding,"ESTIMATED: 4,000–8,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,depuracion retencion en la fuente asalariados,es-CO,CALCULATOR,Payroll Depuration Logic,"ESTIMATED: 3,500–7,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,base minima retencion en la fuente 95 uvt 2026,es-CO,CHECKER,Minimum Base Threshold,"ESTIMATED: 4,500–8,500/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retefuente procedimiento 1 y 2,es-CO,CALCULATOR,Method 1 vs Method 2,"ESTIMATED: 2,500–5,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,exencion 25 por ciento renta de trabajo uvt,es-CO,CALCULATOR,25% Exempt Labor Income,"ESTIMATED: 3,000–6,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,deduccion por dependientes retencion fuente 2026,es-CO,CALCULATOR,Dependent Deductions,"ESTIMATED: 2,800–5,500/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,deduccion intereses de vivienda retefuente,es-CO,CALCULATOR,Housing Interest Deduction,"ESTIMATED: 2,200–4,600/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,aportes afc y pension voluntaria retencion,es-CO,CALCULATOR,Voluntary Pension Deduction,"ESTIMATED: 1,800–3,800/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retefuente honorarios e independientes,es-CO,CALCULATOR,Contractor Withholding,"ESTIMATED: 4,000–7,800/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,tarifa retencion en la fuente compras 2.5 o 3.5,es-CO,LOOKUP,Commercial Purchase WHT,"ESTIMATED: 3,500–6,800/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,tabla retencion en la fuente servicios 2026,es-CO,LOOKUP,Services WHT Rate,"ESTIMATED: 3,000–6,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,simulador retencion fuente dian gratis excel,es-CO,ACTION,Excel Template Search,"ESTIMATED: 2,500–5,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,tope uvt declaracion de renta 2026 personas naturales,es-CO,CHECKER,Filing Threshold Check,"ESTIMATED: 8,000–15,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculo retefuente prima de servicios,es-CO,CALCULATOR,Bonus Withholding,"ESTIMATED: 2,200–4,500/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,retencion en la fuente indemnizacion laboral,es-CO,CALCULATOR,Severance Compensation WHT,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retencion fuente asalariados uvt,es-CO,CALCULATOR,Salaried UVT Calculator,"ESTIMATED: 3,200–6,500/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,limitacion 40 por ciento rentas exentas dian,es-CO,CALCULATOR,40% Global Exemption Cap,"ESTIMATED: 1,500–3,200/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,retencion en la fuente contrato de prestacion de servicios,es-CO,CALCULATOR,Service Contract WHT,"ESTIMATED: 4,200–8,200/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,como se calcula el porcentaje fijo de retencion procedimiento 2,es-CO,CALCULATOR,Method 2 Percentage,"ESTIMATED: 1,400–2,900/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retencion dividendo personas naturales,es-CO,CALCULATOR,Dividend WHT,"ESTIMATED: 1,600–3,400/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retencion en la fuente 2026 online sin registro,es-CO,CALCULATOR,ReteFuente Main Tool,"ESTIMATED: 2,000–4,200/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,que ingresos entran en la depuracion de retencion,es-CO,CHECKER,Gross Income Scope,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,deduccion medicina prepagada retencion fuente,es-CO,CALCULATOR,Prepaid Health Deduction,"ESTIMATED: 1,500–3,100/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculo retencion de renta salario 5 millones,es-CO,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,500–5,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculo retencion de renta salario 10 millones,es-CO,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,200–4,500/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculo retencion de renta salario 15 millones,es-CO,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 1,800–3,800/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,descuento salud y pension retencion fuente,es-CO,CALCULATOR,Social Security Deduction,"ESTIMATED: 2,800–5,400/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,como aplicar tabla 383 estatuto tributario,es-CO,CALCULATOR,Art 383 Table,"ESTIMATED: 2,000–4,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora retencion en la fuente dian 2026 gratis,es-CO,CALCULATOR,ReteFuente Main Tool,"ESTIMATED: 3,000–6,000/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,retencion en la fuente autorretencion especial 2026,es-CO,LOOKUP,Corporate Self-Withholding,"ESTIMATED: 2,500–5,000/month",MEDIUM
+Colombia,CO,Calculadora ReteFuente DIAN 2026,liquidador retencion fuente asalariados 2026,es-CO,CALCULATOR,ReteFuente Main Tool,"ESTIMATED: 2,800–5,600/month",HIGH
+Colombia,CO,Calculadora ReteFuente DIAN 2026,calculadora uvt a pesos colombia 2026,es-CO,CALCULATOR,UVT Rate Check,"ESTIMATED: 4,000–8,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),shif deduction calculator kenya 2026,en-KE,CALCULATOR,SHIF Deduction Main,"ESTIMATED: 10,000–20,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),paye calculator with shif and housing levy,en-KE,CALCULATOR,Combined Net Payslip,"ESTIMATED: 12,000–22,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),gross to net salary calculator kenya,en-KE,CALCULATOR,Net Salary Main,"ESTIMATED: 15,000–28,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),nssf tier 1 and tier 2 calculator kenya 2026,en-KE,CALCULATOR,NSSF Tier I/II,"ESTIMATED: 6,000–12,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),housing levy calculator kenya 1.5 percent,en-KE,CALCULATOR,Housing Levy,"ESTIMATED: 5,000–10,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),taifa care shif calculator payslip,en-KE,CALCULATOR,SHIF Deduction Main,"ESTIMATED: 4,000–8,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),kra paye tax bands 2026 calculator,en-KE,CALCULATOR,PAYE Tax Brackets,"ESTIMATED: 7,000–13,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),new nhif to shif rates calculation table,en-KE,LOOKUP,SHIF vs NHIF Rates,"ESTIMATED: 5,500–10,500/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),nssf rates 2026 table kenya lower upper limit,en-KE,LOOKUP,NSSF Tier I/II,"ESTIMATED: 4,500–9,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),kra personal relief calculator 2400 per month,en-KE,CALCULATOR,Personal Relief Claim,"ESTIMATED: 3,000–6,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),insurance relief shif kra itax claim,en-KE,CALCULATOR,SHIF Tax Relief,"ESTIMATED: 2,500–5,000/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),how to calculate net salary from gross pay kenya,en-KE,CALCULATOR,Net Salary Main,"ESTIMATED: 6,500–12,500/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),online payslip calculator kenya no sign up,en-KE,CALCULATOR,Combined Net Payslip,"ESTIMATED: 4,000–8,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),kenya salary calculator with 2026 statutory rates,en-KE,CALCULATOR,Combined Net Payslip,"ESTIMATED: 5,000–9,500/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),nssf upper earnings limit 108000 calculation,en-KE,CALCULATOR,NSSF Tier I/II,"ESTIMATED: 2,000–4,200/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),shif minimum contribution 300 calculation,en-KE,CHECKER,SHIF Minimum Base,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),affordable housing levy tax relief calculation,en-KE,CALCULATOR,Housing Relief,"ESTIMATED: 2,200–4,500/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),net salary after tax for 50000 gross salary kenya,en-KE,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 3,500–7,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),net salary after tax for 100000 gross salary kenya,en-KE,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 3,200–6,400/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),net salary after tax for 30000 gross salary kenya,en-KE,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,800–5,600/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),kra tax calculator for freelancers self employed,en-KE,CALCULATOR,Self-Employed PAYE/TOT,"ESTIMATED: 2,500–5,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),nssf tier 2 opt out private pension rba rules,en-KE,CHECKER,NSSF Tier II Opt-Out,"ESTIMATED: 1,500–3,200/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),paye top tax rate 35 percent salary threshold,en-KE,LOOKUP,PAYE Tax Brackets,"ESTIMATED: 1,800–3,800/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),how to file shif monthly return employer portal,en-KE,ACTION,Employer Portal Action,"ESTIMATED: 2,200–4,500/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),how to file housing levy return itax kra,en-KE,ACTION,Employer Portal Action,"ESTIMATED: 2,000–4,000/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),kra payslip calculator android app,en-KE,ACTION,App Search,"ESTIMATED: 1,500–3,200/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),calculator for net salary in kenya shilling,en-KE,CALCULATOR,Net Salary Main,"ESTIMATED: 3,800–7,600/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),simple paye calculator kenya 2026,en-KE,CALCULATOR,PAYE Tax Brackets,"ESTIMATED: 3,000–6,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),how much is shif deduction for 80k salary,en-KE,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,000–4,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),how much is housing levy for 150k salary,en-KE,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 1,600–3,400/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),nssf tier 1 max deduction 2026,en-KE,LOOKUP,NSSF Tier I/II,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),shif 2.75 percent gross salary formula,en-KE,CALCULATOR,SHIF Deduction Main,"ESTIMATED: 2,500–5,000/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),kenya minimum wage 2026 net pay calculator,en-KE,CALCULATOR,Minimum Wage Net Pay,"ESTIMATED: 2,200–4,500/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),accurate payslip calculator kenya 2026 free,en-KE,CALCULATOR,Combined Net Payslip,"ESTIMATED: 2,800–5,600/month",HIGH
+Kenya,KE,Kenya Net Payslip Calculator (SHIF + Housing Levy),calckenya net salary calculator 2026,en-KE,CALCULATOR,Competitor Navigational,"ESTIMATED: 3,500–7,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur salaire net maroc 2026,fr-MA,CALCULATOR,Net Salary Main,"ESTIMATED: 9,000–18,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,nouveau bareme ir maroc 2026 dgi,fr-MA,LOOKUP,IR Tax Brackets,"ESTIMATED: 7,000–14,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,simulation fiche de paie maroc 2026,fr-MA,CALCULATOR,Net Salary Main,"ESTIMATED: 6,000–12,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul ir dgi maroc 40000 dh exoneration,fr-MA,CALCULATOR,40k MAD Exemption Limit,"ESTIMATED: 4,000–8,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur salaire brut en net maroc,fr-MA,CALCULATOR,Gross to Net Conversion,"ESTIMATED: 8,000–15,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,taux marginal ir 37 pourcent maroc 2026,fr-MA,LOOKUP,IR Tax Brackets,"ESTIMATED: 2,500–5,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,cotisation cnss 4.48 pourcent calcul salaire,fr-MA,CALCULATOR,CNSS Contribution,"ESTIMATED: 3,500–7,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,cotisation amo 2.26 pourcent privé maroc,fr-MA,CALCULATOR,AMO Healthcare Rate,"ESTIMATED: 3,000–6,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,deduction frais professionnels paie maroc 2026,fr-MA,CALCULATOR,Professional Expenses,"ESTIMATED: 2,800–5,500/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,reduction ir charges de famille 600 dh an,fr-MA,CALCULATOR,Family Deductions,"ESTIMATED: 2,200–4,500/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul ir salaire net cadre maroc,fr-MA,CALCULATOR,Executive Salary Net,"ESTIMATED: 3,000–6,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,hssab lmsrof net maroc ir 2026,ar-MA,CALCULATOR,Arabic Net Salary Query,"ESTIMATED: 4,000–8,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,حساب الأجر الصافي المغرب 2026,ar-MA,CALCULATOR,Arabic Net Salary Query,"ESTIMATED: 5,000–10,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,جدول الضريبة على الدخل المغرب 2026,ar-MA,LOOKUP,Arabic IR Brackets,"ESTIMATED: 4,500–9,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,حساب ضريبة الأجور الضمان الاجتماعي,ar-MA,CALCULATOR,Arabic Payroll Tax,"ESTIMATED: 3,200–6,400/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul salaire net fonctionnaire maroc 2026,fr-MA,CALCULATOR,Civil Servant Net Salary,"ESTIMATED: 4,000–7,800/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,smig maroc 2026 valorisation salaire bruto,fr-MA,LOOKUP,Minimum Wage (SMIG),"ESTIMATED: 5,000–10,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul retraite cimr et cnss fiche de paie,fr-MA,CALCULATOR,Pension Deductions,"ESTIMATED: 2,000–4,200/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,simulation salaire net avec primes variables,fr-MA,CALCULATOR,Variable Bonus Base,"ESTIMATED: 1,800–3,800/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur ir maroc excel gratuit 2026,fr-MA,ACTION,Excel Template Search,"ESTIMATED: 2,500–5,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul ir brut imposable dgi maroc,fr-MA,CALCULATOR,Taxable Gross Base,"ESTIMATED: 2,200–4,500/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,abattement forfaitaire frais professionnels 2026,fr-MA,CALCULATOR,Professional Expenses,"ESTIMATED: 1,600–3,400/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul salaire net auto entrepreneur vs salarié,fr-MA,CALCULATOR,Status Comparison,"ESTIMATED: 2,000–4,000/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur fiche de paie marocaine sans inscription,fr-MA,CALCULATOR,Net Salary Main,"ESTIMATED: 2,800–5,600/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,tranches ir loi de finances 2025 2026 maroc,fr-MA,LOOKUP,IR Tax Brackets,"ESTIMATED: 3,200–6,400/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur salaire net 10000 dh maroc,fr-MA,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,500–5,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur salaire net 20000 dh maroc,fr-MA,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,000–4,200/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur salaire net 5000 dh maroc,fr-MA,CALCULATOR,Specific Salary Benchmark,"ESTIMATED: 2,200–4,500/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,plafond cnss 6000 dh calcul ir,fr-MA,CALCULATOR,CNSS Cap Limit,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,exonération ir premier emploi jeunes recrues,fr-MA,CHECKER,First Job Exemption,"ESTIMATED: 1,500–3,200/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calcul indemnité de transport exonérée ir,fr-MA,CALCULATOR,Transport Allowance Exempt,"ESTIMATED: 1,600–3,400/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,bareme retenue a la source ir maroc,fr-MA,LOOKUP,IR Tax Brackets,"ESTIMATED: 2,000–4,000/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,simulateur paie ojraweb maroc 2026,fr-MA,CALCULATOR,Competitor Navigational,"ESTIMATED: 2,200–4,500/month",HIGH
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,upsilon consulting calculateur salaire net,fr-MA,CALCULATOR,Competitor Navigational,"ESTIMATED: 1,800–3,600/month",MEDIUM
+Morocco,MA,Calculateur Salaire Net & IR Maroc 2026,calculateur salaire net maroc mobile app,fr-MA,ACTION,App Search,"ESTIMATED: 1,400–3,000/month",MEDIUM

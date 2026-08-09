@@ -1,6 +1,6 @@
 {
-  "name": "brazil-ir-2026-calculator",
-  "version": "0.1.0",
+  "name": "regukit-regulatory-utility-factory",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

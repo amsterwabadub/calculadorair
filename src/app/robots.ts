@@ -5,7 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: ['/_next/', '/api/'],
     },
-    sitemap: 'https://calculadorair.online/sitemap.xml',
+    sitemap: 'https://regulo.online/sitemap.xml',
   };
 }

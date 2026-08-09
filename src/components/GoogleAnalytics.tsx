@@ -2,12 +2,8 @@
 
 import Script from 'next/script';
 
-export default function GoogleAnalytics() {
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
-  if (!gaId) {
-    return null;
-  }
+export default function GoogleAnalytics({ gaId }: { gaId: string }) {
+  if (!gaId) return null;
 
   return (
     <>
@@ -25,7 +21,6 @@ export default function GoogleAnalytics() {
             gtag('js', new Date());
             gtag('config', '${gaId}', {
               page_path: window.location.pathname,
-              send_page_view: true
             });
           `,
         }}
