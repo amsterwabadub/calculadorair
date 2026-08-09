@@ -12,7 +12,14 @@ Data de lançamento do domínio de produção: **9 de agosto de 2026**.
 
 ---
 
-## 2. Inventário de Páginas Indexáveis (Launch Test Set)
+## 2. Google Search Console Status
+- **Propriedade de Domínio:** `calculadorair.online` (Domain Property)
+- **Status de Verificação:** **VERIFICADO** (Verificação DNS TXT concluída via Vercel DNS em 09/08/2026)
+- **Sitemap Submetido:** `https://calculadorair.online/sitemap.xml`
+
+---
+
+## 3. Inventário de Páginas Indexáveis (Launch Test Set)
 
 | Tipo de Página | Quantidade | Exemplos de Slugs |
 | :--- | :---: | :--- |
@@ -24,7 +31,7 @@ Data de lançamento do domínio de produção: **9 de agosto de 2026**.
 
 ---
 
-## 3. Clusters de Páginas
+## 4. Clusters de Páginas
 
 - **Cluster A — Salary Exact:** `/imposto-de-renda-salario-*` (16 páginas)
 - **Cluster B — Calculator Intent:** `/` e `/calculadora-irrf-2026`
@@ -33,7 +40,7 @@ Data de lançamento do domínio de produção: **9 de agosto de 2026**.
 
 ---
 
-## 4. Status de Integrações
+## 5. Status de Integrações
 
 - **Google Analytics 4:** Código de integração ativo via `@next/third-parties/google` ou Google Tag script em `src/components/GoogleAnalytics.tsx`. Ativado dinamicamente quando a variável `NEXT_PUBLIC_GA_MEASUREMENT_ID` é configurada.
-- **Search Console:** Propriedade configurada para o domínio `calculadorair.online` com sitemap enviado.
+- **Search Console:** Propriedade de domínio `calculadorair.online` verificado.
