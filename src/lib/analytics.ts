@@ -1,15 +1,15 @@
 /**
  * Analytics Event Abstraction Layer
  * 
- * Safely logs user engagement events without collecting or transmitting any PII
- * or exact personal financial data.
+ * Transmits real Google Analytics 4 (GA4) events when `window.gtag` is present.
+ * Safely logs user engagement without transmitting any PII (names, emails, exact salary values).
  */
 
 export type BenefitType = 'ISENTO_TOTAL' | 'REDUCAO_PARCIAL' | 'FORA_DO_BENEFICIO';
 
 export interface CalculatorCompleteParams {
-  salaryBand: string;       // e.g. "R$ 4.000 - R$ 5.000"
-  savingBand: string;       // e.g. "R$ 100 - R$ 200/mês"
+  salaryBand: string;       // e.g. "R$ 4.001 - R$ 5.000"
+  savingBand: string;       // e.g. "R$ 101 - R$ 300/mês"
   benefitType: BenefitType;
 }
 
@@ -18,11 +18,23 @@ export interface SalaryPageViewParams {
   salaryValue: number;
 }
 
+export interface AccountantCtaClickParams {
+  sourcePage: string;
+  salaryBand?: string;
+}
+
+// Helper to safely send GA4 events
+function sendGAEvent(eventName: string, eventParams?: Record<string, unknown>) {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', eventName, eventParams);
+  }
+}
+
 export const analytics = {
   trackCalculatorStart: () => {
     if (typeof window !== 'undefined') {
       console.log('[Analytics] event: calculator_start');
-      // Ready for Google Analytics / Plausible / PostHog hookup
+      sendGAEvent('calculator_start');
       window.dispatchEvent(new CustomEvent('analytics_calculator_start'));
     }
   },
@@ -30,6 +42,11 @@ export const analytics = {
   trackCalculatorComplete: (params: CalculatorCompleteParams) => {
     if (typeof window !== 'undefined') {
       console.log('[Analytics] event: calculator_complete', params);
+      sendGAEvent('calculator_complete', {
+        salary_band: params.salaryBand,
+        monthly_saving_band: params.savingBand,
+        benefit_type: params.benefitType,
+      });
       window.dispatchEvent(
         new CustomEvent('analytics_calculator_complete', { detail: params })
       );
@@ -38,7 +55,12 @@ export const analytics = {
 
   trackSalaryPageView: (params: SalaryPageViewParams) => {
     if (typeof window !== 'undefined') {
-      console.log('[Analytics] event: salary_page_view', params);
+      const salaryBand = getSalaryBand(params.salaryValue);
+      console.log('[Analytics] event: salary_page_view', { ...params, salaryBand });
+      sendGAEvent('salary_page_view', {
+        salary_band: salaryBand,
+        page_slug: params.salarySlug,
+      });
       window.dispatchEvent(
         new CustomEvent('analytics_salary_page_view', { detail: params })
       );
@@ -48,15 +70,20 @@ export const analytics = {
   trackAccountantCtaView: () => {
     if (typeof window !== 'undefined') {
       console.log('[Analytics] event: accountant_cta_view');
+      sendGAEvent('accountant_cta_view');
       window.dispatchEvent(new CustomEvent('analytics_accountant_cta_view'));
     }
   },
 
-  trackAccountantCtaClick: (source: string) => {
+  trackAccountantCtaClick: (sourcePage: string, salaryBand?: string) => {
     if (typeof window !== 'undefined') {
-      console.log('[Analytics] event: accountant_cta_click', { source });
+      console.log('[Analytics] event: accountant_cta_click', { sourcePage, salaryBand });
+      sendGAEvent('accountant_cta_click', {
+        source_page: sourcePage,
+        salary_band: salaryBand || 'not_specified',
+      });
       window.dispatchEvent(
-        new CustomEvent('analytics_accountant_cta_click', { detail: { source } })
+        new CustomEvent('analytics_accountant_cta_click', { detail: { sourcePage, salaryBand } })
       );
     }
   },
@@ -86,6 +113,7 @@ export function getSavingBand(saving: number): string {
 
 declare global {
   interface Window {
+    gtag?: (...args: unknown[]) => void;
     dataLayer?: Record<string, unknown>[];
   }
 }

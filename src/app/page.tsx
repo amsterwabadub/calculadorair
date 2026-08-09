@@ -7,7 +7,12 @@ export const metadata = {
   title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
   description: 'Informe seu salário mensal e compare quanto pagava antes e quanto paga agora com a nova tabela do Imposto de Renda 2026 (Lei nº 15.270/2025). Isenção até R$ 5.000.',
   alternates: {
-    canonical: 'https://calculadorair2026.com.br',
+    canonical: 'https://calculadorair.online',
+  },
+  openGraph: {
+    title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
+    description: 'Informe seu salário mensal e compare quanto pagava antes e quanto paga agora com a nova tabela do Imposto de Renda 2026.',
+    url: 'https://calculadorair.online',
   },
 };
 
@@ -52,10 +57,10 @@ export default function HomePage() {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'Calculadora Imposto de Renda 2026',
-    url: 'https://calculadorair2026.com.br',
+    url: 'https://calculadorair.online',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'All',
-    description: 'Simulador gratuito do Imposto de Renda 2026 em Portugal/Brasil com comparação de economia.',
+    description: 'Simulador gratuito do Imposto de Renda 2026 com comparação de economia.',
   };
 
   const jsonLdFaq = {

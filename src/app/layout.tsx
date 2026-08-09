@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://calculadorair.online'),
   title: {
     default: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
     template: '%s | Calculadora IR 2026',
@@ -21,10 +23,13 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+    canonical: 'https://calculadorair.online',
+  },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://calculadorair2026.com.br',
+    url: 'https://calculadorair.online',
     title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
     description: 'Informe seu salário e descubra instantaneamente sua economia mensal e anual com as novas regras da Lei nº 15.270/2025.',
     siteName: 'Calculadora Imposto de Renda 2026',
@@ -39,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
+        <GoogleAnalytics />
         <Header />
         <main>{children}</main>
         <Footer />

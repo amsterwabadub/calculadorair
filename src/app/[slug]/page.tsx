@@ -66,7 +66,12 @@ export async function generateMetadata({ params }: PageProps) {
     return {
       title: guide.title,
       description: guide.description,
-      alternates: { canonical: `https://calculadorair2026.com.br/${slug}` },
+      alternates: { canonical: `https://calculadorair.online/${slug}` },
+      openGraph: {
+        title: guide.title,
+        description: guide.description,
+        url: `https://calculadorair.online/${slug}`,
+      },
     };
   }
 
@@ -77,10 +82,18 @@ export async function generateMetadata({ params }: PageProps) {
     const calc = calculateTaxComparison(salary);
     const savingText = calc.monthlySaving > 0 ? `Economia de ${formatBRL(calc.monthlySaving)}/mês` : 'Cálculo completo 2026';
 
+    const pageTitle = `Imposto de Renda para Salário de R$ ${salary.toLocaleString('pt-BR')} em 2026 — ${savingText}`;
+    const pageDesc = `Quem ganha R$ ${salary.toLocaleString('pt-BR')} paga quanto de Imposto de Renda em 2026? Imposto anterior: ${formatBRL(calc.oldTax)}. Novo imposto: ${formatBRL(calc.newTax)}. Economia anual: ${formatBRL(calc.annualSaving12Months)}.`;
+
     return {
-      title: `Imposto de Renda para Salário de R$ ${salary.toLocaleString('pt-BR')} em 2026 — ${savingText}`,
-      description: `Quem ganha R$ ${salary.toLocaleString('pt-BR')} paga quanto de Imposto de Renda em 2026? Imposto anterior: ${formatBRL(calc.oldTax)}. Novo imposto: ${formatBRL(calc.newTax)}. Economia anual: ${formatBRL(calc.annualSaving12Months)}.`,
-      alternates: { canonical: `https://calculadorair2026.com.br/${slug}` },
+      title: pageTitle,
+      description: pageDesc,
+      alternates: { canonical: `https://calculadorair.online/${slug}` },
+      openGraph: {
+        title: pageTitle,
+        description: pageDesc,
+        url: `https://calculadorair.online/${slug}`,
+      },
     };
   }
 
@@ -159,8 +172,8 @@ export default async function DynamicSlugPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://calculadorair2026.com.br' },
-      { '@type': 'ListItem', position: 2, name: `Salário R$ ${salary.toLocaleString('pt-BR')}`, item: `https://calculadorair2026.com.br/${slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://calculadorair.online' },
+      { '@type': 'ListItem', position: 2, name: `Salário R$ ${salary.toLocaleString('pt-BR')}`, item: `https://calculadorair.online/${slug}` },
     ],
   };
 

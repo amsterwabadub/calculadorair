@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://calculadorair2026.com.br/sitemap.xml',
+    sitemap: 'https://calculadorair.online/sitemap.xml',
   };
 }
