@@ -23,6 +23,13 @@ export interface AccountantCtaClickParams {
   salaryBand?: string;
 }
 
+export interface LeadEventParams {
+  leadType: string;
+  sourcePage: string;
+  landingCluster?: string;
+  partner?: string;
+}
+
 // Helper to safely send GA4 events
 function sendGAEvent(eventName: string, eventParams?: Record<string, unknown>) {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
@@ -85,6 +92,56 @@ export const analytics = {
       window.dispatchEvent(
         new CustomEvent('analytics_accountant_cta_click', { detail: { sourcePage, salaryBand } })
       );
+    }
+  },
+
+  trackLeadFormView: (sourcePage: string) => {
+    if (typeof window !== 'undefined') {
+      console.log('[Analytics] event: lead_form_view', { sourcePage });
+      sendGAEvent('lead_form_view', { source_page: sourcePage });
+      window.dispatchEvent(new CustomEvent('analytics_lead_form_view', { detail: { sourcePage } }));
+    }
+  },
+
+  trackLeadFormStart: (sourcePage: string) => {
+    if (typeof window !== 'undefined') {
+      console.log('[Analytics] event: lead_form_start', { sourcePage });
+      sendGAEvent('lead_form_start', { source_page: sourcePage });
+      window.dispatchEvent(new CustomEvent('analytics_lead_form_start', { detail: { sourcePage } }));
+    }
+  },
+
+  trackLeadSubmit: (params: LeadEventParams) => {
+    if (typeof window !== 'undefined') {
+      console.log('[Analytics] event: lead_submit', params);
+      sendGAEvent('lead_submit', {
+        lead_type: params.leadType,
+        source_page: params.sourcePage,
+        landing_cluster: params.landingCluster || 'general',
+      });
+      window.dispatchEvent(new CustomEvent('analytics_lead_submit', { detail: params }));
+    }
+  },
+
+  trackQualifiedLead: (params: LeadEventParams) => {
+    if (typeof window !== 'undefined') {
+      console.log('[Analytics] event: qualified_lead', params);
+      sendGAEvent('qualified_lead', {
+        lead_type: params.leadType,
+        source_page: params.sourcePage,
+      });
+      window.dispatchEvent(new CustomEvent('analytics_qualified_lead', { detail: params }));
+    }
+  },
+
+  trackLeadSent: (params: LeadEventParams) => {
+    if (typeof window !== 'undefined') {
+      console.log('[Analytics] event: lead_sent', params);
+      sendGAEvent('lead_sent', {
+        lead_type: params.leadType,
+        partner: params.partner || 'unassigned',
+      });
+      window.dispatchEvent(new CustomEvent('analytics_lead_sent', { detail: params }));
     }
   },
 };
