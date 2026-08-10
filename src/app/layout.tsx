@@ -5,6 +5,9 @@ import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata: Metadata = {
+  // Yandex Webmaster ownership verification. The host is already registered
+  // in the Operator Ventures Webmaster account; this only proves ownership.
+  verification: { yandex: "0cb703a7fde4484b" },
   metadataBase: new URL('https://calculadorair.online'),
   title: {
     default: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
