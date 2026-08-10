@@ -42,6 +42,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-KLNEN6LL8G';
+  // Yandex Metrika counter for calculadorair.online. The counter already exists
+  // in the Operator Ventures Metrika account; this only installs the tag.
+  const ymId = process.env.NEXT_PUBLIC_YM_ID || '111448611';
 
   return (
     <html lang="pt-BR">
@@ -60,8 +63,29 @@ export default function RootLayout({
             `,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+              m[i].l=1*new Date();
+              for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+              k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+              (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+              ym(${ymId}, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true });
+            `,
+          }}
+        />
       </head>
       <body>
+        <noscript>
+          <div>
+            <img
+              src={`https://mc.yandex.ru/watch/${ymId}`}
+              style={{ position: 'absolute', left: '-9999px' }}
+              alt=""
+            />
+          </div>
+        </noscript>
         <Header />
         <main>{children}</main>
         <Footer />
