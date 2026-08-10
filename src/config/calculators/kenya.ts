@@ -17,14 +17,14 @@ export const calculateKenyaSalary = (inputs: Record<string, any>): CalculationRe
   const voluntaryPension = Math.min(20000, Math.max(0, Number(inputs.pension) || 0));
   const otherDeductions = Math.max(0, Number(inputs.otherDeductions) || 0);
 
-  // 1. NSSF Calculation (2026 Statutory Rates)
-  // Tier I: 6% of earnings up to 7,000 KES (Max 420 KES)
-  // Tier II: 6% of earnings from 7,001 KES to 36,000 KES (Max 1,740 KES)
-  const tier1 = Math.min(monthlyGross, 7000) * 0.06;
-  const tier2 = Math.max(0, Math.min(monthlyGross - 7000, 29000)) * 0.06;
-  const nssfDeduction = tier1 + tier2; // Max 2,160 KES
+  // 1. NSSF Calculation (Official 2026 Schedule - Effective February 2026)
+  // Tier I: 6% of earnings up to KES 9,000 (Max KES 540)
+  // Tier II: 6% of earnings from KES 9,001 to KES 108,000 (Max KES 5,940)
+  const tier1 = Math.min(monthlyGross, 9000) * 0.06;
+  const tier2 = Math.max(0, Math.min(monthlyGross - 9000, 99000)) * 0.06;
+  const nssfDeduction = tier1 + tier2; // Max KES 6,480/mo
 
-  // 2. SHIF Calculation (Social Health Insurance Fund 2.75%, minimum 300 KES)
+  // 2. SHIF Calculation (Social Health Insurance Fund 2.75%, minimum KES 300)
   let shifDeduction = 0;
   if (monthlyGross > 0) {
     shifDeduction = Math.max(300, monthlyGross * 0.0275);
@@ -91,7 +91,7 @@ export const calculateKenyaSalary = (inputs: Record<string, any>): CalculationRe
       formattedValue: formatKES(payFrequency === 'annual' ? netMonthlySalary * 12 : netMonthlySalary),
       isHero: true,
       type: 'positive',
-      description: 'Your actual take-home income after all mandatory statutory statutory deductions and tax reliefs.',
+      description: 'Your actual take-home income after all mandatory statutory deductions and tax reliefs.',
     },
     breakdown: [
       {
@@ -107,7 +107,7 @@ export const calculateKenyaSalary = (inputs: Record<string, any>): CalculationRe
         value: nssfDeduction,
         formattedValue: `- ${formatKES(nssfDeduction)}`,
         type: 'negative',
-        description: 'Tier I & Tier II compulsory NSSF retirement contribution (max KES 2,160/mo).',
+        description: 'Tier I & Tier II compulsory NSSF retirement contribution (max KES 6,480/mo).',
       },
       {
         id: 'shif',
@@ -175,7 +175,7 @@ export const calculateKenyaSalary = (inputs: Record<string, any>): CalculationRe
     notes: [
       'Updated for Kenya Finance Act 2024/2026 regulations and KRA P9 statutory tables.',
       'SHIF contribution is calculated at 2.75% of gross income with 15% tax relief applied automatically.',
-      'NSSF contributions follow the Phase III statutory ceiling of KES 36,000 pensionable base.',
+      'NSSF contributions follow the Year 3 statutory schedule effective February 2026 (Tier I limit KES 9,000; Tier II upper limit KES 108,000; total max KES 6,480/mo).',
     ],
   };
 };
@@ -189,8 +189,8 @@ export const KENYA_CALCULATOR_CONFIG: CalculatorConfig = {
   currencyCode: 'KES',
   currencySymbol: 'KSh',
   name: 'Kenya Net Salary Calculator 2026',
-  description: 'Calculate your exact net take-home salary in Kenya after KRA PAYE tax, NSSF pension, SHIF health insurance, and Housing Levy deductions.',
-  lastUpdated: '2026-08-01',
+  description: 'Calculate your exact net take-home salary in Kenya after KRA PAYE tax, NSSF Phase III (max KES 6,480), SHIF health insurance, and Housing Levy deductions.',
+  lastUpdated: '2026-08-10',
   inputs: [
     {
       id: 'grossSalary',
@@ -240,7 +240,7 @@ export const KENYA_CALCULATOR_CONFIG: CalculatorConfig = {
       slug: 'net-salary-calculator',
       title: 'Kenya Net Salary Calculator 2026 — Official KRA PAYE, SHIF & NSSF Utility',
       h1: 'Kenya Net Salary Calculator 2026',
-      metaDescription: 'Free online Kenya Net Salary Calculator updated for 2026 KRA tax bands, SHIF 2.75%, NSSF Phase III, and 1.5% Housing Levy. Get instant itemized pay breakdown.',
+      metaDescription: 'Free online Kenya Net Salary Calculator updated for 2026 KRA tax bands, SHIF 2.75%, NSSF 2026 schedule (max KES 6,480), and 1.5% Housing Levy.',
       keywords: ['kenya net salary calculator 2026', 'kra paye calculator kenya', 'shif calculator kenya', 'housing levy calculator', 'take home salary kenya'],
       canonicalUrl: 'https://regulo.online/ke/net-salary-calculator',
       explanationMarkdown: `
@@ -248,11 +248,11 @@ export const KENYA_CALCULATOR_CONFIG: CalculatorConfig = {
 
 Under current Kenya Revenue Authority (KRA) guidelines and the Ministry of Health regulations, employment income in Kenya is subject to statutory payroll deductions.
 
-#### 1. NSSF Pension Contributions (Phase III)
-Compulsory retirement contributions under the NSSF Act are split into two tiers:
-* **Tier I**: 6% of earnings up to KES 7,000 (Maximum KES 420 per month).
-* **Tier II**: 6% of earnings between KES 7,001 and KES 36,000 (Maximum KES 1,740 per month).
-* **Total Max NSSF Contribution**: KES 2,160 per month.
+#### 1. NSSF Pension Contributions (2026 Schedule Effective Feb 2026)
+Compulsory retirement contributions under the NSSF Act Year 3 implementation schedule are split into two tiers:
+* **Tier I**: 6% of earnings up to KES 9,000 (Maximum KES 540 per month).
+* **Tier II**: 6% of earnings between KES 9,001 and KES 108,000 (Maximum KES 5,940 per month).
+* **Total Max NSSF Contribution**: KES 6,480 per month (employee) + KES 6,480 (employer).
 
 #### 2. Social Health Insurance Fund (SHIF)
 Replacing the former NHIF system, SHIF requires a flat **2.75% contribution** of gross income (minimum KES 300/month). Contributors enjoy a **15% SHIF tax relief** on their monthly contribution.
@@ -277,7 +277,7 @@ PAYE is charged on Taxable Base (Gross Salary minus allowable NSSF and pension d
         },
         {
           question: 'What is the maximum NSSF contribution in Kenya in 2026?',
-          answer: 'The maximum total employee NSSF contribution is KES 2,160 per month (KES 420 for Tier I plus KES 1,740 for Tier II). Employers provide an equal matching amount.',
+          answer: 'Under the official 2026 schedule effective February 2026, the maximum total employee NSSF contribution is KES 6,480 per month (KES 540 for Tier I plus KES 5,940 for Tier II). Employers provide an equal matching amount.',
         },
         {
           question: 'How is Personal Relief applied in Kenya PAYE?',
@@ -294,17 +294,15 @@ PAYE is charged on Taxable Base (Gross Salary minus allowable NSSF and pension d
     },
     'kenya-net-salary-calculator-2026': {
       slug: 'kenya-net-salary-calculator-2026',
-      title: 'Kenya Net Salary Calculator 2026 — Latest KRA Rules',
+      title: 'Kenya Net Salary Calculator 2026 — Latest KRA & NSSF Rules',
       h1: 'Kenya Net Salary Calculator 2026 (Updated Rules)',
-      metaDescription: 'Calculate your updated 2026 net salary in Kenya including new KRA income tax brackets, SHIF health rates, and statutory housing levy.',
+      metaDescription: 'Calculate your updated 2026 net salary in Kenya including new KRA income tax brackets, SHIF health rates, and 2026 NSSF schedule (max KES 6,480).',
       keywords: ['kenya net salary 2026', 'kra tax bands 2026', 'salary after tax kenya 2026'],
       canonicalUrl: 'https://regulo.online/ke/kenya-net-salary-calculator-2026',
       explanationMarkdown: `
 ### Updated 2026 Kenya Net Salary Rules
 
-Calculations on this page reflect all statutory amendments passed in the latest Kenya Finance Acts and Ministry of Health directives.
-
-Use this tool to compare your net earnings across different salary offers or structure executive pay packages accurately.
+Calculations on this page reflect all statutory amendments passed in the latest Kenya Finance Acts, NSSF 2026 schedule, and Ministry of Health directives.
       `,
       faqs: [
         {
@@ -321,7 +319,7 @@ Use this tool to compare your net earnings across different salary offers or str
       slug: 'salary-after-tax-kenya',
       title: 'Salary After Tax Kenya — How Much Do You Take Home?',
       h1: 'Salary After Tax Calculator Kenya',
-      metaDescription: 'Discover how much of your gross salary remains after KRA PAYE tax, SHIF, NSSF pension, and Housing Levy. Instant payroll calculation.',
+      metaDescription: 'Discover how much of your gross salary remains after KRA PAYE tax, SHIF, NSSF pension (max KES 6,480), and Housing Levy.',
       keywords: ['salary after tax kenya', 'take home pay kenya', 'kra deduction breakdown'],
       canonicalUrl: 'https://regulo.online/ke/salary-after-tax-kenya',
       explanationMarkdown: `
@@ -332,7 +330,7 @@ Your salary after tax is your final disposable income after all legal statutory 
       faqs: [
         {
           question: 'How do I calculate take home salary in Kenya?',
-          answer: 'Take home salary = Gross Salary - NSSF - SHIF - Housing Levy - Net PAYE Tax. You can enter your salary above to view an immediate breakdown.',
+          answer: 'Take home salary = Gross Salary - NSSF - SHIF - Housing Levy - Net PAYE Tax.',
         },
       ],
       relatedPages: [
@@ -350,7 +348,7 @@ Your salary after tax is your final disposable income after all legal statutory 
       explanationMarkdown: `
 ### KRA PAYE Tax Computation Guide
 
-PAYE (Pay As You Earn) is calculated progressively. Higher salary portions are taxed at higher marginal rates up to 35%.
+PAYE (Pay As You Earn) is calculated progressively on Taxable Base (Gross Salary minus allowable NSSF and pension deductions).
       `,
       faqs: [
         {

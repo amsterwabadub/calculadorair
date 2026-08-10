@@ -19,14 +19,18 @@ export const calculateMoroccoSalary = (inputs: Record<string, any>): Calculation
   // 2. AMO (2.26% uncapped)
   const amoDeduction = grossSalary * 0.0226;
 
-  // 3. Frais Professionnels (35% capped at 2,916.67 MAD/month)
+  // 3. Frais Professionnels (CGI Article 59):
+  // 35% for gross taxable salary <= 6,500 DH/mo (78,000 DH/yr)
+  // 25% for gross taxable salary > 6,500 DH/mo (78,000 DH/yr)
+  // Monthly ceiling: 2,916.67 DH (35,000 DH/yr)
+  const fraisProRate = grossSalary <= 6500 ? 0.35 : 0.25;
   const fraisProMaxMonthly = 35000 / 12; // 2,916.67 MAD
-  const fraisPro = Math.min(grossSalary * 0.35, fraisProMaxMonthly);
+  const fraisPro = Math.min(grossSalary * fraisProRate, fraisProMaxMonthly);
 
   // 4. Salaire Net Imposable (SNI)
   const netImposable = Math.max(0, grossSalary - cnssDeduction - amoDeduction - fraisPro);
 
-  // 5. Impôt sur le Revenu (IR) Barème 2026 Mensuel
+  // 5. Impôt sur le Revenu (IR) Barème 2026 Mensuel (Loi 55-23)
   let irRate = 0;
   let sommeADeduire = 0;
 
@@ -52,7 +56,7 @@ export const calculateMoroccoSalary = (inputs: Record<string, any>): Calculation
 
   const grossIr = Math.max(0, netImposable * irRate - sommeADeduire);
 
-  // 6. Charges de famille (50 MAD per dependent up to 6 = max 300 MAD)
+  // 6. Charges de famille (50 MAD per dependent up to 6 = max 300 MAD/month, CGI Art. 74)
   const familyRelief = dependents * 50;
   const netIr = Math.max(0, grossIr - familyRelief);
 
@@ -96,11 +100,11 @@ export const calculateMoroccoSalary = (inputs: Record<string, any>): Calculation
       },
       {
         id: 'frais_pro',
-        label: 'Abattement pour Frais Professionnels',
+        label: `Abattement Frais Professionnels (${(fraisProRate * 100).toFixed(0)}%)`,
         value: fraisPro,
         formattedValue: formatMAD(fraisPro),
         type: 'neutral',
-        description: 'Déduction forfaitaire de 35% (plafond de 2 916,67 DH/mois).',
+        description: `Déduction forfaitaire de ${(fraisProRate * 100).toFixed(0)}% (CGI Art. 59; plafonné à 2 916,67 DH/mois).`,
       },
       {
         id: 'net_imposable',
@@ -122,11 +126,11 @@ export const calculateMoroccoSalary = (inputs: Record<string, any>): Calculation
         value: familyRelief,
         formattedValue: `+ ${formatMAD(familyRelief)}`,
         type: 'positive',
-        description: `50 DH par personne à charge (pour ${dependents} personne(s)).`,
+        description: `50 DH par personne à charge (pour ${dependents} personne(s), max 300 DH).`,
       },
       {
         id: 'net_ir',
-        label: 'Impôt IR Net Prelevé',
+        label: 'Impôt IR Net Prélevé',
         value: netIr,
         formattedValue: `- ${formatMAD(netIr)}`,
         type: 'negative',
@@ -141,9 +145,9 @@ export const calculateMoroccoSalary = (inputs: Record<string, any>): Calculation
       },
     ],
     notes: [
-      'Calcul conforme à la Loi de Finances et au Code Général des Impôts (CGI) du Maroc pour 2026.',
+      'Calcul conforme au Code Général des Impôts (CGI) du Maroc et à la Loi de Finances (Loi 55-23) pour 2026.',
       'Le plafond mensuel CNSS retenu est fixé à 6 000 DH (cotisation salariale maximale de 268,80 DH).',
-      'Le barème progressif de l\'IR intègre la déduction pour frais professionnels révisée.',
+      'L\'abattement pour frais professionnels est de 35% pour les salaires bruts <= 6 500 DH/mois et de 25% au-delà (plafonné à 2 916,67 DH/mois).',
     ],
   };
 };
@@ -158,7 +162,7 @@ export const MOROCCO_CALCULATOR_CONFIG: CalculatorConfig = {
   currencySymbol: 'DH',
   name: 'Calculateur Salaire Net Maroc 2026',
   description: 'Calculez gratuitement votre salaire net mensuel au Maroc après cotisations CNSS, AMO et retenue d\'Impôt sur le Revenu (IR) 2026.',
-  lastUpdated: '2026-08-01',
+  lastUpdated: '2026-08-10',
   inputs: [
     {
       id: 'grossSalary',
@@ -185,9 +189,9 @@ export const MOROCCO_CALCULATOR_CONFIG: CalculatorConfig = {
   pages: {
     'salaire-net-calculateur': {
       slug: 'salaire-net-calculateur',
-      title: 'Calculateur Salaire Net Maroc 2026 — CNSS, AMO & Impôt IR',
+      title: 'Calculateur Salaire Net Maroc 2026 — CNSS, AMO & Impôt IR (CGI Art. 59)',
       h1: 'Calculateur Salaire Net Maroc 2026',
-      metaDescription: 'Simulateur officiel du salaire net au Maroc mis à jour pour 2026. Calculez votre salaire net imposable, cotisations CNSS, AMO et retenue IR.',
+      metaDescription: 'Simulateur officiel du salaire net au Maroc mis à jour pour 2026. Calculez votre salaire net imposable, cotisations CNSS, AMO et retenue IR conforme au CGI.',
       keywords: ['calculateur salaire net maroc 2026', 'calcul salaire net brut maroc', 'cnss amo ir maroc 2026', 'bareme ir maroc'],
       canonicalUrl: 'https://regulo.online/ma/salaire-net-calculateur',
       explanationMarkdown: `
@@ -199,10 +203,13 @@ Le calcul du salaire net au Maroc s'effectue en déduisant du salaire brut mensu
 * **CNSS (Sécurité Sociale)** : 4,48% de la tranche de salaire plafonnée à **6 000 DH par mois** (soit un montant maximal retenu de **268,80 DH/mois**).
 * **AMO (Assurance Maladie Obligatoire)** : 2,26% appliqué sur la totalité du salaire brut sans aucun plafond.
 
-#### 2. Déduction pour Frais Professionnels
-Pour déterminer le Salaire Net Imposable (SNI), un abattement forfaitaire pour frais professionnels de **35%** est appliqué sur le salaire brut, plafonné à **2 916,67 DH par mois** (soit 35 000 DH/an).
+#### 2. Déduction pour Frais Professionnels (CGI Art. 59)
+Pour déterminer le Salaire Net Imposable (SNI), un abattement forfaitaire est appliqué :
+* **35%** pour les salaires bruts imposables ≤ 6 500 DH/mois (78 000 DH/an).
+* **25%** pour les salaires bruts imposables > 6 500 DH/mois (78 000 DH/an).
+* **Plafond mensuel** : **2 916,67 DH par mois** (soit 35 000 DH/an).
 
-#### 3. Barème Mensuel de l'IR 2026
+#### 3. Barème Mensuel de l'IR 2026 (Loi de Finances 55-23)
 L'Impôt sur le Revenu (IR) s'applique selon le barème progressif ci-dessous :
 
 $$\\text{Barème IR Mensuel 2026}$$
@@ -213,7 +220,7 @@ $$\\text{Barème IR Mensuel 2026}$$
 * **De 8 333,34 à 15 000,00 DH** : 34% (Somme à déduire : 1 833,33 DH)
 * **Au-delà de 15 000,00 DH** : 37% (Somme à déduire : 2 283,33 DH)
 
-#### 4. Réduction pour Charges de Famille
+#### 4. Réduction pour Charges de Famille (CGI Art. 74)
 Une déduction d'impôt de **50 DH par mois et par personne à charge** (conjoint sans emploi et enfants légitimes) est accordée dans la limite de 6 personnes (maximum 300 DH/mois).
       `,
       faqs: [
@@ -223,11 +230,11 @@ Une déduction d'impôt de **50 DH par mois et par personne à charge** (conjoin
         },
         {
           question: 'Comment fonctionnent les réductions pour charges de famille au Maroc ?',
-          answer: 'Chaque personne à charge (conjoint et enfants de moins de 27 ans sans revenu) donne droit à une déduction d\'impôt directe de 50 DH par mois, plafonnée à 6 personnes (300 DH/mois).',
+          answer: 'Chaque personne à charge donne droit à une déduction d\'impôt directe de 50 DH par mois, plafonnée à 6 personnes (300 DH/mois).',
         },
         {
-          question: 'Quelle est la différence entre Salaire Brut et Salaire Net Imposable ?',
-          answer: 'Le Salaire Net Imposable est le résultat du Salaire Brut diminué des cotisations sociales (CNSS, AMO) et de l\'abattement forfaitaire pour frais professionnels (35%). C\'est sur cette base que s\'applique le barème de l\'IR.',
+          question: 'Quelle est la règle de déduction des frais professionnels selon l\'Article 59 du CGI ?',
+          answer: 'Le taux d\'abattement est de 35% pour un salaire brut jusqu\'à 6 500 DH/mois (78 000 DH/an) et de 25% pour la tranche supérieure, le tout plafonné à 2 916,67 DH par mois.',
         },
       ],
       relatedPages: [

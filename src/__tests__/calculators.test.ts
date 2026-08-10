@@ -11,9 +11,9 @@ describe('ReguKit Statutory Calculation Engines 2026', () => {
       expect(result.heroOutput.value).toBeGreaterThan(0);
       expect(result.heroOutput.value).toBeLessThan(100000);
       
-      // NSSF max tier 1 + tier 2 = 2,160
+      // NSSF Year 3 schedule: Tier I up to 9k (540), Tier II 9k..100k @ 6% (5,460) = 6,000 KES
       const nssf = result.breakdown.find((b) => b.id === 'nssf');
-      expect(nssf?.value).toBe(2160);
+      expect(nssf?.value).toBe(6000);
 
       // SHIF 2.75% of 100,000 = 2,750
       const shif = result.breakdown.find((b) => b.id === 'shif');
@@ -22,24 +22,30 @@ describe('ReguKit Statutory Calculation Engines 2026', () => {
       // Housing Levy 1.5% of 100,000 = 1,500
       const housing = result.breakdown.find((b) => b.id === 'housing_levy');
       expect(housing?.value).toBe(1500);
+
+      // Hero output value (net salary) must be positive and less than gross
+      expect(result.heroOutput.value).toBeGreaterThan(0);
+      expect(result.heroOutput.value).toBeLessThan(100000);
     });
   });
 
   describe('Mexico Aguinaldo Calculator Engine', () => {
     it('calculates net aguinaldo with 30 UMA exemption for MXN 25,000 salary', () => {
-      const result = calculateMexicoAguinaldo({
+      const inputs = {
         monthlySalary: 25000,
         daysWorked: 365,
-        customDaysEntitled: 15,
-      });
+        dailyRateOverride: 0,
+      };
 
-      // 15 days gross aguinaldo = 25,000 / 2 = 12,500 MXN
+      const result = calculateMexicoAguinaldo(inputs);
+
+      // Gross aguinaldo for 365 days = 15 days of daily rate (25000 / 30 * 15 = 12,500 MXN)
       const gross = result.breakdown.find((b) => b.id === 'gross_aguinaldo');
-      expect(gross?.value).toBe(12500);
+      expect(gross?.value).toBeCloseTo(12500, 1);
 
-      // Exempt 30 UMA ~ 3,394.20 MXN
+      // Exempt 30 UMA (2026 UMA = $117.31 MXN -> $3,519.30 MXN)
       const exempt = result.breakdown.find((b) => b.id === 'exempt_amount');
-      expect(exempt?.value).toBeCloseTo(3394.20, 1);
+      expect(exempt?.value).toBeCloseTo(3519.30, 1);
 
       // Net must be positive and less than gross
       expect(result.heroOutput.value).toBeGreaterThan(3394.20);
