@@ -13,10 +13,18 @@
  *
  * IMPORTANT — basis of the redutor
  * -------------------------------
- * The Lei 15.270/2025 redutor is applied to the RENDIMENTO BRUTO mensal
- * (rendimentos tributáveis sujeitos à incidência mensal), NOT to the base de
- * cálculo after INSS/dependent deductions. This is confirmed arithmetically by
- * the two anchor points the law is built around:
+ * There are TWO different bases in this calculation, and mixing them up changes
+ * the answer:
+ *
+ *   1. "rendimentos tributáveis sujeitos à incidência mensal" — the taxable
+ *      earnings BEFORE deductions. This is what the REDUTOR is computed on, and
+ *      what the R$ 5.000,00 / R$ 7.350,00 thresholds refer to.
+ *   2. "base de cálculo" — those same earnings AFTER INSS, dependants and other
+ *      legal deductions (or after the desconto simplificado, whichever is
+ *      larger). This is what the PROGRESSIVE TABLE is applied to.
+ *
+ * The redutor uses (1), not (2). Confirmed arithmetically by the two anchor
+ * points the law is built around:
  *
  *   redutor(5.000,00) = 978,62 - 0,133145 × 5.000,00 = 312,89
  *   ...which is exactly the tax due on a R$ 5.000 salary using the simplified

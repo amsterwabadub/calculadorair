@@ -37,7 +37,7 @@ export interface TaxCalculationResult {
 
   /** Tax assessed by the 2026 table before the redutor is subtracted. */
   taxBeforeRedutor: number;
-  /** Redutor applied in 2026, computed on gross income and capped at the tax. */
+  /** Redutor applied in 2026, computed on rendimentos tributáveis and capped at the tax. */
   reducerAmount: number;
 
   // Savings
@@ -105,27 +105,31 @@ export function calculateProgressiveTax2026(taxableIncome: number): number {
 /**
  * Redutor do imposto (Lei nº 15.270/2025).
  *
- * NOTE the argument: this is the GROSS monthly income (rendimentos tributáveis
- * sujeitos à incidência mensal), not the base de cálculo. See the derivation in
- * `data/tax-rules-2026.ts`.
+ * NOTE the argument: `taxableEarnings` is the "rendimentos tributáveis sujeitos
+ * à incidência mensal" — the taxable earnings BEFORE INSS/dependent deductions.
+ * It is NOT the base de cálculo. The two are different bases in the same
+ * calculation. See the derivation in `data/tax-rules-2026.ts`.
  *
  * The caller is responsible for capping the result at the tax assessed.
  */
-export function calculate2026Reducer(grossMonthlyIncome: number): number {
+export function calculate2026Reducer(taxableEarnings: number): number {
   const { grossUpperLimit, baseAmount, multiplier } = RULES_2026.redutor;
 
-  if (grossMonthlyIncome <= 0 || grossMonthlyIncome > grossUpperLimit) return 0;
+  if (taxableEarnings <= 0 || taxableEarnings > grossUpperLimit) return 0;
 
-  return Math.max(0, round2(baseAmount - multiplier * grossMonthlyIncome));
+  return Math.max(0, round2(baseAmount - multiplier * taxableEarnings));
 }
 
 /**
- * Full 2026 assessment for a given gross salary and its base de cálculo.
+ * Full 2026 assessment.
+ * `taxableEarnings` = rendimentos tributáveis (pre-deduction), which drives the
+ * redutor; `taxableIncome` = base de cálculo (post-deduction), which drives the
+ * progressive table.
  * Returns the tax before the redutor, the redutor actually applied (capped at
  * the tax), the final tax and the resulting benefit classification.
  */
 export function calculateNew2026Tax(
-  grossMonthlyIncome: number,
+  taxableEarnings: number,
   taxableIncome: number,
 ): {
   taxBeforeRedutor: number;
@@ -134,7 +138,7 @@ export function calculateNew2026Tax(
   benefitType: BenefitType;
 } {
   const taxBeforeRedutor = calculateProgressiveTax2026(taxableIncome);
-  const rawReducer = calculate2026Reducer(grossMonthlyIncome);
+  const rawReducer = calculate2026Reducer(taxableEarnings);
   const reducerAmount = round2(Math.min(taxBeforeRedutor, rawReducer));
   const finalTax = Math.max(0, round2(taxBeforeRedutor - reducerAmount));
 
@@ -198,19 +202,19 @@ export function calculateTaxComparison(
     case 'ISENTO_TOTAL':
       appliedRuleLabel = 'Sem imposto na fonte em 2026';
       explanation =
-        'Com as regras de 2026, o imposto apurado é totalmente anulado pelo redutor: não há retenção de IRRF sobre este salário. O redutor da Lei nº 15.270/2025 zera o imposto para rendimentos brutos mensais de até R$ 5.000,00.';
+        'Com as regras de 2026, o imposto apurado é totalmente anulado pelo redutor: não há retenção de IRRF sobre este salário. O redutor da Lei nº 15.270/2025 zera o imposto para rendimentos tributáveis mensais de até R$ 5.000,00.';
       break;
 
     case 'REDUCAO_PARCIAL':
       appliedRuleLabel = 'Redutor parcial 2026';
-      explanation = `O redutor da Lei nº 15.270/2025 incide sobre o rendimento bruto mensal e diminui à medida que o salário se aproxima de R$ 7.350,00. Neste caso o redutor aplicado é de R$ ${reducerAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} por mês.`;
+      explanation = `O redutor da Lei nº 15.270/2025 incide sobre os rendimentos tributáveis mensais, antes das deduções, e diminui à medida que o salário se aproxima de R$ 7.350,00. Neste caso o redutor aplicado é de R$ ${reducerAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} por mês.`;
       break;
 
     case 'FORA_DO_BENEFICIO':
     default:
       appliedRuleLabel = 'Tabela progressiva 2026';
       explanation =
-        'Acima de R$ 7.350,00 de rendimento bruto mensal o redutor deixa de ser aplicado. O imposto segue a tabela progressiva de 2026, que ainda assim é um pouco mais branda que a de 2025 por causa da faixa de isenção maior.';
+        'Acima de R$ 7.350,00 de rendimentos tributáveis mensais o redutor deixa de ser aplicado. O imposto segue a tabela progressiva de 2026, que ainda assim é um pouco mais branda que a de 2025 por causa da faixa de isenção maior.';
       break;
   }
 

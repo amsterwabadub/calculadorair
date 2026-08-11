@@ -119,7 +119,7 @@ export default async function DynamicSlugPage({ params }: PageProps) {
           <article className="card" style={{ padding: '2rem', lineHeight: '1.8', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <h2>Como funciona a reforma do Imposto de Renda em 2026</h2>
             <p>
-              A Lei nº 15.270/2025 reformulou o Imposto de Renda Retido na Fonte (IRRF) a partir de 1º de janeiro de 2026. O objetivo principal foi zerar a retenção para quem recebe até R$ 5.000,00 brutos por mês e criar uma transição suave para as faixas seguintes.
+              A Lei nº 15.270/2025 reformulou o Imposto de Renda Retido na Fonte (IRRF) a partir de 1º de janeiro de 2026. O objetivo principal foi zerar a retenção para quem tem rendimentos tributáveis de até R$ 5.000,00 por mês e criar uma transição suave para as faixas seguintes.
             </p>
             <h3>Como o cálculo funciona</h3>
             <ol>
@@ -130,10 +130,10 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 <strong>Imposto pela tabela de 2026:</strong> a tabela progressiva incide sobre essa base, com isenção até R$ 2.428,80 e alíquotas de 7,5% a 27,5%.
               </li>
               <li>
-                <strong>Redutor:</strong> calculado sobre o <strong>rendimento bruto mensal</strong>, e não sobre a base de cálculo, pela fórmula `R$ 978,62 - (0,133145 x rendimento bruto)`. Ele é subtraído do imposto apurado e nunca o ultrapassa.
+                <strong>Redutor:</strong> calculado sobre os <strong>rendimentos tributáveis sujeitos à incidência mensal</strong> — o salário tributável antes das deduções — e não sobre a base de cálculo, pela fórmula `R$ 978,62 - (0,133145 x rendimentos tributáveis)`. Ele é subtraído do imposto apurado e nunca o ultrapassa.
               </li>
             </ol>
-            <h3>Faixas do redutor (sobre o salário bruto)</h3>
+            <h3>Faixas do redutor (sobre os rendimentos tributáveis mensais)</h3>
             <ul>
               <li><strong>Até R$ 5.000,00:</strong> o redutor anula todo o imposto apurado — retenção de R$ 0,00.</li>
               <li><strong>De R$ 5.000,01 a R$ 7.350,00:</strong> redutor decrescente, de R$ 312,89 até zero.</li>
@@ -259,11 +259,11 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 <strong>Redutor da Lei nº 15.270/2025:</strong>{' '}
                 {calc.reducerAmount > 0 ? (
                   <>
-                    O redutor incide sobre o <strong>rendimento bruto</strong> de {formatBRL(salary)} e vale <strong>{formatBRL(calc.reducerAmount)}</strong>, limitado ao imposto apurado. O IRRF final fica em <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
+                    O redutor incide sobre os <strong>rendimentos tributáveis</strong> de {formatBRL(salary)} e vale <strong>{formatBRL(calc.reducerAmount)}</strong>, limitado ao imposto apurado. O IRRF final fica em <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
                   </>
                 ) : (
                   <>
-                    Não há redutor: ele só se aplica a rendimentos brutos mensais de até {formatBRL(TAX_RULES_2026.rules2026.redutor.grossUpperLimit)}. O IRRF final fica em <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
+                    Não há redutor: ele só se aplica a rendimentos tributáveis mensais de até {formatBRL(TAX_RULES_2026.rules2026.redutor.grossUpperLimit)}. O IRRF final fica em <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
                   </>
                 )}
               </li>

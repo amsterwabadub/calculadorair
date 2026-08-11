@@ -25,15 +25,15 @@ export default function HomePage() {
   const faqs = [
     {
       q: 'Quem ganha R$ 5.000 vai pagar Imposto de Renda em 2026?',
-      a: 'Não. Pela Lei nº 15.270/2025, quem tem rendimento bruto mensal de até R$ 5.000,00 fica sem retenção de IRRF: o imposto apurado pela tabela progressiva é integralmente anulado pelo redutor. Na prática o resultado é imposto zero na fonte.',
+      a: 'Não. Pela Lei nº 15.270/2025, quem tem rendimentos tributáveis mensais de até R$ 5.000,00 fica sem retenção de IRRF: o imposto apurado pela tabela progressiva é integralmente anulado pelo redutor. Na prática o resultado é imposto zero na fonte.',
     },
     {
       q: 'Como funciona a redução para quem ganha entre R$ 5.000,01 e R$ 7.350,00?',
-      a: 'O redutor é calculado sobre o rendimento bruto mensal pela fórmula R$ 978,62 - (0,133145 x rendimento bruto) e depois subtraído do imposto apurado pela tabela progressiva de 2026 — que por sua vez incide sobre a base de cálculo, já descontados o INSS e as demais deduções. O redutor diminui conforme o salário sobe e chega a zero em R$ 7.350,00. Ele nunca ultrapassa o imposto apurado, ou seja, nunca gera crédito.',
+      a: 'O redutor é calculado sobre os rendimentos tributáveis sujeitos à incidência mensal — ou seja, o salário tributável antes das deduções — pela fórmula R$ 978,62 - (0,133145 x rendimentos tributáveis). O resultado é subtraído do imposto apurado pela tabela progressiva de 2026, que por sua vez incide sobre a base de cálculo, já descontados o INSS e as demais deduções. São duas bases diferentes no mesmo cálculo. O redutor diminui conforme o salário sobe, chega a zero em R$ 7.350,00 e nunca ultrapassa o imposto apurado.',
     },
     {
       q: 'Quem ganha acima de R$ 7.350,00 tem algum desconto na nova lei?',
-      a: 'Acima de R$ 7.350,00 de rendimento bruto mensal o redutor não se aplica. Ainda assim há uma pequena diferença em relação a 2025, porque a tabela progressiva de 2026 tem faixa de isenção maior (R$ 2.428,80) e desconto simplificado maior (R$ 607,20).',
+      a: 'Acima de R$ 7.350,00 de rendimentos tributáveis mensais o redutor não se aplica. Ainda assim há uma pequena diferença em relação a 2025, porque a tabela progressiva de 2026 tem faixa de isenção maior (R$ 2.428,80) e desconto simplificado maior (R$ 607,20).',
     },
     {
       q: 'Se eu ficar isento na fonte, ainda preciso fazer a declaração anual?',
@@ -134,7 +134,7 @@ export default function HomePage() {
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>2️⃣</div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Aplica a tabela e o redutor</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                  Apura o imposto pela tabela de 2026 e subtrai o redutor `R$ 978,62 - (0,133145 x rendimento bruto)`, válido até R$ 7.350 de salário bruto.
+                  Apura o imposto pela tabela de 2026 e subtrai o redutor `R$ 978,62 - (0,133145 x rendimentos tributáveis)`, válido até R$ 7.350.
                 </p>
               </div>
 
@@ -155,7 +155,7 @@ export default function HomePage() {
             </h2>
             <div style={{ fontSize: '1rem', color: 'var(--color-text-main)', lineHeight: '1.7', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <p>
-                A reforma do IRPF (Lei nº 15.270/2025) mudou o cálculo do imposto retido na fonte em três frentes. As faixas de R$ 5.000 e R$ 7.350 abaixo referem-se ao <strong>rendimento bruto mensal</strong>, e não à base de cálculo — o redutor da nova lei incide sobre o rendimento bruto, antes das deduções.
+                A reforma do IRPF (Lei nº 15.270/2025) mudou o cálculo do imposto retido na fonte em três frentes. As faixas de R$ 5.000 e R$ 7.350 abaixo referem-se aos <strong>rendimentos tributáveis sujeitos à incidência mensal</strong> — o salário tributável <em>antes</em> das deduções —, e não à base de cálculo apurada depois do INSS e dos dependentes.
               </p>
               <ul style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <li>
