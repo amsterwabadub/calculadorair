@@ -361,7 +361,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
   font-size: clamp(2rem, 4.4vw, 3rem); color: var(--verde-mata); margin: 18px 0 14px; }
 .ci-h1 em { font-style: normal; color: var(--amarelo-ipe); }
 .ci-lead { font-size: 1.06rem; line-height: 1.6; color: var(--concreto); max-width: 46ch; }
-.ci-facts { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
+.ci-facts { list-style: none; display: flex; flex-wrap: wrap; gap: 10px;
+  /* The hero grid row spans the full height of the calculator column; without
+     these the <ul> stretches and the chips grow into tall empty pills. */
+  align-self: start; align-items: flex-start; align-content: flex-start; }
 .ci-facts li { background: #fff; border: 1px solid var(--linha); border-radius: var(--radius-full);
   padding: 8px 14px; font-size: .84rem; font-weight: 600; color: var(--azul-noite); }
 .ci-facts b { color: var(--verde-cerrado); }
