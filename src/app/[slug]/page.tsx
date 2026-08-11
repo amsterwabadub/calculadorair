@@ -3,26 +3,9 @@ import Link from 'next/link';
 import Calculator from '@/components/Calculator';
 import TrustBanner from '@/components/TrustBanner';
 import { calculateTaxComparison, formatBRL } from '@/lib/tax-calculator';
+import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
 
-// Salary pages data definitions
-const SALARY_PAGES: Record<number, { slug: string }> = {
-  3000: { slug: 'imposto-de-renda-salario-3000' },
-  3500: { slug: 'imposto-de-renda-salario-3500' },
-  4000: { slug: 'imposto-de-renda-salario-4000' },
-  4500: { slug: 'imposto-de-renda-salario-4500' },
-  5000: { slug: 'imposto-de-renda-salario-5000' },
-  5500: { slug: 'imposto-de-renda-salario-5500' },
-  6000: { slug: 'imposto-de-renda-salario-6000' },
-  6500: { slug: 'imposto-de-renda-salario-6500' },
-  7000: { slug: 'imposto-de-renda-salario-7000' },
-  7350: { slug: 'imposto-de-renda-salario-7350' },
-  8000: { slug: 'imposto-de-renda-salario-8000' },
-  9000: { slug: 'imposto-de-renda-salario-9000' },
-  10000: { slug: 'imposto-de-renda-salario-10000' },
-  12000: { slug: 'imposto-de-renda-salario-12000' },
-  15000: { slug: 'imposto-de-renda-salario-15000' },
-  20000: { slug: 'imposto-de-renda-salario-20000' },
-};
+import { SALARY_VALUES, SALARY_BY_SLUG, salarySlug } from '@/data/salary-pages';
 
 // Guide pages data definitions
 const GUIDE_PAGES: Record<string, { title: string; description: string }> = {
@@ -44,14 +27,14 @@ const GUIDE_PAGES: Record<string, { title: string; description: string }> = {
   },
 };
 
-const SALARY_LIST = Object.keys(SALARY_PAGES).map(Number).sort((a, b) => a - b);
+const SALARY_LIST = [...SALARY_VALUES].sort((a, b) => a - b);
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  const salarySlugs = Object.values(SALARY_PAGES).map((p) => ({ slug: p.slug }));
+  const salarySlugs = SALARY_VALUES.map((s) => ({ slug: salarySlug(s) }));
   const guideSlugs = Object.keys(GUIDE_PAGES).map((slug) => ({ slug }));
   return [...salarySlugs, ...guideSlugs];
 }
@@ -76,9 +59,9 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   // Check salary page
-  const salaryEntry = Object.entries(SALARY_PAGES).find(([_, v]) => v.slug === slug);
-  if (salaryEntry) {
-    const salary = Number(salaryEntry[0]);
+  const salaryFromSlug = SALARY_BY_SLUG[slug];
+  if (salaryFromSlug !== undefined) {
+    const salary = salaryFromSlug;
     const calc = calculateTaxComparison(salary);
     const savingText = calc.monthlySaving > 0 ? `Economia de ${formatBRL(calc.monthlySaving)}/mês` : 'Cálculo completo 2026';
 
@@ -136,13 +119,25 @@ export default async function DynamicSlugPage({ params }: PageProps) {
           <article className="card" style={{ padding: '2rem', lineHeight: '1.8', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <h2>Como funciona a reforma do Imposto de Renda em 2026</h2>
             <p>
-              A Lei nº 15.270/2025 reformulou o Imposto de Renda Retido na Fonte (IRRF) a partir de 1º de janeiro de 2026. O objetivo principal foi isentar trabalhadores com remuneração mensal de até R$ 5.000,00 e criar uma transição suave de alíquotas para as faixas subsequentes.
+              A Lei nº 15.270/2025 reformulou o Imposto de Renda Retido na Fonte (IRRF) a partir de 1º de janeiro de 2026. O objetivo principal foi zerar a retenção para quem recebe até R$ 5.000,00 brutos por mês e criar uma transição suave para as faixas seguintes.
             </p>
-            <h3>Tabela de Regras Principais</h3>
+            <h3>Como o cálculo funciona</h3>
+            <ol>
+              <li>
+                <strong>Base de cálculo:</strong> salário bruto menos INSS, dependentes e demais deduções legais — ou menos o desconto simplificado de R$ 607,20, quando este for maior.
+              </li>
+              <li>
+                <strong>Imposto pela tabela de 2026:</strong> a tabela progressiva incide sobre essa base, com isenção até R$ 2.428,80 e alíquotas de 7,5% a 27,5%.
+              </li>
+              <li>
+                <strong>Redutor:</strong> calculado sobre o <strong>rendimento bruto mensal</strong>, e não sobre a base de cálculo, pela fórmula `R$ 978,62 - (0,133145 x rendimento bruto)`. Ele é subtraído do imposto apurado e nunca o ultrapassa.
+              </li>
+            </ol>
+            <h3>Faixas do redutor (sobre o salário bruto)</h3>
             <ul>
-              <li><strong>Até R$ 5.000,00:</strong> Isenção total (Imposto = R$ 0,00).</li>
-              <li><strong>De R$ 5.000,01 a R$ 7.350,00:</strong> Aplicação do redutor decrescente `R$ 978,62 - (0,133145 x Rendimento Tributável)`.</li>
-              <li><strong>Acima de R$ 7.350,00:</strong> Tabela progressiva mensal padrão sem aplicação de redutor adicional.</li>
+              <li><strong>Até R$ 5.000,00:</strong> o redutor anula todo o imposto apurado — retenção de R$ 0,00.</li>
+              <li><strong>De R$ 5.000,01 a R$ 7.350,00:</strong> redutor decrescente, de R$ 312,89 até zero.</li>
+              <li><strong>Acima de R$ 7.350,00:</strong> sem redutor; vale apenas a tabela progressiva de 2026.</li>
             </ul>
 
             <div style={{ background: 'var(--color-emerald-bg)', border: '1px solid var(--color-emerald-border)', padding: '1rem', borderRadius: 'var(--radius-md)', marginTop: '1rem' }}>
@@ -155,12 +150,12 @@ export default async function DynamicSlugPage({ params }: PageProps) {
   }
 
   // Render Salary Page
-  const salaryEntry = Object.entries(SALARY_PAGES).find(([_, v]) => v.slug === slug);
-  if (!salaryEntry) {
+  const salaryFromSlug = SALARY_BY_SLUG[slug];
+  if (salaryFromSlug === undefined) {
     notFound();
   }
 
-  const salary = Number(salaryEntry[0]);
+  const salary = salaryFromSlug;
   const calc = calculateTaxComparison(salary);
 
   // Find adjacent salary pages
@@ -249,19 +244,38 @@ export default async function DynamicSlugPage({ params }: PageProps) {
 
             <ol style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <li>
-                <strong>Desconto do INSS:</strong> Com o salário bruto de {formatBRL(salary)}, o desconto progressivo do INSS é de <strong>{formatBRL(calc.inssDeduction)}</strong>.
+                <strong>Desconto do INSS:</strong> Sobre o salário bruto de {formatBRL(salary)}, o desconto progressivo do INSS de 2026 é de <strong>{formatBRL(calc.inssDeduction)}</strong>.
               </li>
               <li>
-                <strong>Base de Cálculo do Imposto:</strong> Subtraindo o INSS (ou o desconto simplificado oficial), a base de cálculo tributável é de <strong>{formatBRL(calc.taxableIncome)}</strong>.
+                <strong>Base de cálculo em 2026:</strong> Aplicando a maior dedução entre o INSS e o desconto simplificado de {formatBRL(TAX_RULES_2026.rules2026.simplifiedMonthlyDiscount)}, a base de cálculo é de <strong>{formatBRL(calc.taxableIncome)}</strong>.
               </li>
               <li>
-                <strong>Imposto Retido Antes das Novas Regras:</strong> Pela tabela antiga de 2025, o imposto cobrado seria de <strong>{formatBRL(calc.oldTax)}</strong> (alíquota efetiva de {calc.oldEffectiveRate}%).
+                <strong>Imposto pela tabela de 2025:</strong> Pela regra anterior, com base de cálculo de {formatBRL(calc.oldTaxableIncome)}, o imposto seria de <strong>{formatBRL(calc.oldTax)}</strong> (alíquota efetiva de {calc.oldEffectiveRate}%).
               </li>
               <li>
-                <strong>Novo Imposto em 2026 (Lei nº 15.270/2025):</strong> Com a aplicação das novas regras de 2026, o imposto retido passa a ser de <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
+                <strong>Imposto pela tabela de 2026:</strong> Antes do redutor, a tabela de 2026 apura <strong>{formatBRL(calc.taxBeforeRedutor)}</strong>.
               </li>
               <li>
-                <strong>Economia Final no Bolso:</strong> Você economiza <strong>{formatBRL(calc.monthlySaving)} por mês</strong>, o que representa um alívio financeiro total de <strong>{formatBRL(calc.annualSaving12Months)} no ano</strong> (ou {formatBRL(calc.annualSaving13Months)} considerando o 13º salário).
+                <strong>Redutor da Lei nº 15.270/2025:</strong>{' '}
+                {calc.reducerAmount > 0 ? (
+                  <>
+                    O redutor incide sobre o <strong>rendimento bruto</strong> de {formatBRL(salary)} e vale <strong>{formatBRL(calc.reducerAmount)}</strong>, limitado ao imposto apurado. O IRRF final fica em <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
+                  </>
+                ) : (
+                  <>
+                    Não há redutor: ele só se aplica a rendimentos brutos mensais de até {formatBRL(TAX_RULES_2026.rules2026.redutor.grossUpperLimit)}. O IRRF final fica em <strong>{formatBRL(calc.newTax)}</strong> (alíquota efetiva de {calc.newEffectiveRate}%).
+                  </>
+                )}
+              </li>
+              <li>
+                <strong>Diferença no bolso:</strong>{' '}
+                {calc.monthlySaving > 0 ? (
+                  <>
+                    Você paga <strong>{formatBRL(calc.monthlySaving)} a menos por mês</strong>, o que representa <strong>{formatBRL(calc.annualSaving12Months)} no ano</strong> (ou {formatBRL(calc.annualSaving13Months)} considerando o 13º salário).
+                  </>
+                ) : (
+                  <>Neste salário as regras de 2026 resultam no mesmo imposto de 2025.</>
+                )}
               </li>
             </ol>
 
@@ -277,7 +291,7 @@ export default async function DynamicSlugPage({ params }: PageProps) {
             </h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
               {prevSalary ? (
-                <Link href={`/${SALARY_PAGES[prevSalary].slug}`} className="btn btn-outline">
+                <Link href={`/${salarySlug(prevSalary)}`} className="btn btn-outline">
                   ← Salário R$ {prevSalary.toLocaleString('pt-BR')}
                 </Link>
               ) : (
@@ -287,7 +301,7 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 📊 Calculadora Principal
               </Link>
               {nextSalary ? (
-                <Link href={`/${SALARY_PAGES[nextSalary].slug}`} className="btn btn-outline">
+                <Link href={`/${salarySlug(nextSalary)}`} className="btn btn-outline">
                   Salário R$ {nextSalary.toLocaleString('pt-BR')} →
                 </Link>
               ) : (

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { calculateTaxComparison, formatBRL, TaxCalculationResult } from '@/lib/tax-calculator';
 import { analytics, getSalaryBand, getSavingBand } from '@/lib/analytics';
 
@@ -260,38 +259,6 @@ export default function Calculator({ initialSalary = 6000, autoFocus = false }: 
             <p style={{ fontSize: '0.95rem', color: 'var(--color-text-main)', lineHeight: '1.6' }}>
               💡 <strong>Entenda seu resultado:</strong> {result.explanation}
             </p>
-          </div>
-
-          {/* Monetization CTA */}
-          <div
-            style={{
-              backgroundColor: '#f8fafc',
-              border: '1px dashed var(--color-border-hover)',
-              borderRadius: 'var(--radius-md)',
-              padding: '1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-              gap: '1rem',
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-brand-primary)' }}>
-                Precisa de ajuda com sua declaração de Imposto de Renda?
-              </h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-                Tire suas dúvidas ou faça sua declaração com um contador especialista parceiro.
-              </p>
-            </div>
-
-            <Link
-              href="/contador"
-              className="btn btn-emerald"
-              onClick={() => analytics.trackAccountantCtaClick('calculator_result')}
-            >
-              🤝 Encontrar um contador parceiro
-            </Link>
           </div>
 
           {/* Disclaimer */}

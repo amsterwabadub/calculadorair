@@ -29,7 +29,7 @@ export default function Footer() {
               <li><Link href="/isencao-imposto-de-renda-2026">Regra de Isenção até R$ 5k</Link></li>
               <li><Link href="/calculadora-irrf-2026">Calculadora IRRF Mensal</Link></li>
               <li><Link href="/quanto-vou-economizar-imposto-de-renda-2026">Como Calcular sua Economia</Link></li>
-              <li><Link href="/contador">Falar com Contador</Link></li>
+              <li><Link href="/contador">Onde Buscar Ajuda</Link></li>
             </ul>
           </div>
           <div>

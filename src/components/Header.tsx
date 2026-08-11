@@ -12,7 +12,7 @@ export default function Header() {
           <Link href="/nova-tabela-imposto-de-renda-2026">Nova Tabela</Link>
           <Link href="/isencao-imposto-de-renda-2026">Isenção 5k</Link>
           <Link href="/contador" style={{ color: 'var(--color-emerald-text)' }}>
-            Contador
+            Ajuda
           </Link>
         </nav>
       </div>

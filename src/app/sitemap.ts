@@ -1,13 +1,14 @@
 import { MetadataRoute } from 'next';
+import { SALARY_VALUES, salarySlug } from '@/data/salary-pages';
+
+const LAST_MODIFIED = new Date('2026-08-11');
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://calculadorair.online';
 
-  const salaries = [3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7350, 8000, 9000, 10000, 12000, 15000, 20000];
-
-  const salaryEntries: MetadataRoute.Sitemap = salaries.map((s) => ({
-    url: `${baseUrl}/imposto-de-renda-salario-${s}`,
-    lastModified: new Date('2026-08-09'),
+  const salaryEntries: MetadataRoute.Sitemap = SALARY_VALUES.map((s) => ({
+    url: `${baseUrl}/${salarySlug(s)}`,
+    lastModified: LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: s >= 5000 && s <= 8000 ? 0.9 : 0.8,
   }));
@@ -19,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'quanto-vou-economizar-imposto-de-renda-2026',
   ].map((slug) => ({
     url: `${baseUrl}/${slug}`,
-    lastModified: new Date('2026-08-09'),
+    lastModified: LAST_MODIFIED,
     changeFrequency: 'weekly',
     priority: 0.9,
   }));
@@ -27,15 +28,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: baseUrl,
-      lastModified: new Date('2026-08-09'),
+      lastModified: LAST_MODIFIED,
       changeFrequency: 'daily',
       priority: 1.0,
     },
     {
       url: `${baseUrl}/contador`,
-      lastModified: new Date('2026-08-09'),
+      lastModified: LAST_MODIFIED,
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/politica-de-privacidade`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
     ...guideEntries,
     ...salaryEntries,

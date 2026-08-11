@@ -40,35 +40,44 @@ export default function PrivacyPolicyPage() {
               2. Dados Pessoais Coletados e Finalidade
             </h2>
             <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)', marginBottom: '0.75rem' }}>
-              Utilizamos o princípio da minimização dos dados (Art. 6º, III da LGPD). Coletamos apenas os dados estritamente necessários para a prestação do serviço solicitado:
+              <strong>Não coletamos dados pessoais.</strong> Este site não possui formulários, não pede
+              cadastro e não solicita nome, telefone, e-mail, CPF, documentos ou comprovantes de renda.
             </p>
             <ul style={{ paddingLeft: '1.25rem', fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)' }}>
-              <li><strong>Nome Completo:</strong> Para identificação do solicitante.</li>
-              <li><strong>Número de WhatsApp / Telefone:</strong> Para que contadores especialistas parceiros possam entrar em contato relativo ao serviço solicitado.</li>
-              <li><strong>E-mail (opcional):</strong> Para envio de confirmações ou respostas a dúvidas fiscais.</li>
-              <li><strong>Cidade e Estado:</strong> Para direcionamento a parceiros com atuação na sua região.</li>
-              <li><strong>Tipo de Ajuda Fiscais:</strong> Para categorizar a necessidade (Declaração IRPF, Restituição, Retificação, etc.).</li>
+              <li>
+                <strong>Valores da calculadora:</strong> o salário que você digita é processado
+                inteiramente no seu navegador. Ele não é enviado ao nosso servidor, não é armazenado e
+                não aparece em nenhuma ferramenta de analytics.
+              </li>
+              <li>
+                <strong>Dados de navegação agregados:</strong> utilizamos Google Analytics 4 e Yandex
+                Metrika para métricas de audiência. Os eventos de uso da calculadora registram apenas
+                <em> faixas</em> não identificáveis (por exemplo &ldquo;R$ 5.001 - R$ 7.350&rdquo;), nunca o
+                valor exato digitado.
+              </li>
             </ul>
-            <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)', marginTop: '0.75rem' }}>
-              <strong>Não coletamos</strong> CPF, documentos de identificação, comprovantes de renda ou informações financeiras confidenciais. Os cálculos realizados no simulador ocorrem localmente no navegador e não são salvos em nosso banco de dados.
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-brand-primary)', marginBottom: '0.5rem' }}>
+              3. Base Legal para Tratamento (Art. 7º da LGPD)
+            </h2>
+            <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)' }}>
+              Como não coletamos dados pessoais identificáveis, não há tratamento baseado em
+              consentimento. As métricas agregadas de audiência são tratadas com base no
+              <strong> legítimo interesse</strong> (Art. 7º, IX da LGPD), limitado à medição de uso do
+              site.
             </p>
           </section>
 
           <section>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-brand-primary)', marginBottom: '0.5rem' }}>
-              3. Base Legal para Tratamento (Art. 7º, I da LGPD)
+              4. Compartilhamento de Dados
             </h2>
             <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)' }}>
-              O tratamento dos dados pessoais de contato é realizado com base no seu <strong>Consentimento livre, informado e inequívoco</strong> (Art. 7º, I da LGPD), fornecido mediante o preenchimento voluntário do formulário e aceite do checkbox de contato.
-            </p>
-          </section>
-
-          <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-brand-primary)', marginBottom: '0.5rem' }}>
-              4. Compartilhamento de Dados com Parceiros
-            </h2>
-            <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)' }}>
-              Os dados de contato fornecidos poderão ser compartilhados com contadores e escritórios de contabilidade parceiros estritamente para o propósito de atendimento à sua solicitação de orçamento ou orientação para a declaração do IRPF 2026.
+              Não compartilhamos, vendemos nem intermediamos dados pessoais com contadores, escritórios
+              de contabilidade ou qualquer terceiro. Os únicos terceiros com acesso a dados agregados de
+              navegação são os provedores de analytics citados acima.
             </p>
           </section>
 
@@ -85,7 +94,9 @@ export default function PrivacyPolicyPage() {
               <li>Revogação do consentimento e eliminação dos dados pessoais salvos.</li>
             </ul>
             <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--color-text-muted)', marginTop: '0.75rem' }}>
-              Para exercer seus direitos de titular ou solicitar exclusão dos seus dados, envie uma mensagem para <strong>privacidade@calculadorair.online</strong> informando seu nome e número de telefone cadastrado.
+              Como não mantemos cadastro de titulares, normalmente não há dados a acessar, corrigir ou
+              eliminar. Para qualquer dúvida sobre privacidade, escreva para{' '}
+              <strong>privacidade@calculadorair.online</strong>.
             </p>
           </section>
         </div>

@@ -1,5 +1,3 @@
-import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
-
 export default function TrustBanner() {
   return (
     <div
@@ -22,7 +20,7 @@ export default function TrustBanner() {
         <span>Receita Federal & Lei nº 15.270/2025</span>
       </div>
       <div>
-        <span>📅 <strong>Atualizado em:</strong> 8 de agosto de 2026</span>
+        <span>📅 <strong>Parâmetros verificados em:</strong> 11 de agosto de 2026</span>
       </div>
     </div>
   );

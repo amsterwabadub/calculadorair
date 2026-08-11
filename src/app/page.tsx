@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Calculator from '@/components/Calculator';
 import TrustBanner from '@/components/TrustBanner';
 import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
+import { FEATURED_SALARY_EXAMPLES } from '@/data/salary-pages';
 
 export const metadata = {
   title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
@@ -17,27 +18,22 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  const salaryExamples = [
-    { salary: 4000, label: 'R$ 4.000', badge: 'Isento 2026', saving: 'Até R$ 263/mês' },
-    { salary: 5000, label: 'R$ 5.000', badge: 'Isenção Máxima', saving: 'R$ 479/mês (R$ 5.748/ano)' },
-    { salary: 6000, label: 'R$ 6.000', badge: 'Redução Gradual', saving: 'R$ 179/mês (R$ 2.157/ano)' },
-    { salary: 7000, label: 'R$ 7.000', badge: 'Redução Parcial', saving: 'R$ 46/mês (R$ 559/ano)' },
-    { salary: 8000, label: 'R$ 8.000', badge: 'Tabela Padrão', saving: 'Sem redução adicional' },
-    { salary: 10000, label: 'R$ 10.000', badge: 'Tabela Padrão', saving: 'Sem redução adicional' },
-  ];
+  // Every figure below is computed by the same engine that powers the salary
+  // pages — see src/data/salary-pages.ts. Nothing here is hardcoded.
+  const salaryExamples = FEATURED_SALARY_EXAMPLES;
 
   const faqs = [
     {
       q: 'Quem ganha R$ 5.000 vai pagar Imposto de Renda em 2026?',
-      a: 'Não. Com as novas regras aprovadas na Lei nº 15.270/2025, os rendimentos tributáveis mensais de até R$ 5.000,00 passam a ser 100% isentos de imposto de renda retido na fonte.',
+      a: 'Não. Pela Lei nº 15.270/2025, quem tem rendimento bruto mensal de até R$ 5.000,00 fica sem retenção de IRRF: o imposto apurado pela tabela progressiva é integralmente anulado pelo redutor. Na prática o resultado é imposto zero na fonte.',
     },
     {
       q: 'Como funciona a redução para quem ganha entre R$ 5.000,01 e R$ 7.350,00?',
-      a: 'Quem recebe nessa faixa tem direito a um redutor decrescente calculado pela fórmula: R$ 978,62 - (0,133145 x rendimento tributável). Esse desconto reduz gradualmente o imposto apurado pela tabela progressiva tradicional até zerar em R$ 7.350,00.',
+      a: 'O redutor é calculado sobre o rendimento bruto mensal pela fórmula R$ 978,62 - (0,133145 x rendimento bruto) e depois subtraído do imposto apurado pela tabela progressiva de 2026 — que por sua vez incide sobre a base de cálculo, já descontados o INSS e as demais deduções. O redutor diminui conforme o salário sobe e chega a zero em R$ 7.350,00. Ele nunca ultrapassa o imposto apurado, ou seja, nunca gera crédito.',
     },
     {
       q: 'Quem ganha acima de R$ 7.350,00 tem algum desconto na nova lei?',
-      a: 'Para rendimentos tributáveis acima de R$ 7.350,00, o benefício do redutor adicional deixa de ser aplicado. O imposto é calculado normalmente de acordo com a tabela progressiva padrão de 27,5%.',
+      a: 'Acima de R$ 7.350,00 de rendimento bruto mensal o redutor não se aplica. Ainda assim há uma pequena diferença em relação a 2025, porque a tabela progressiva de 2026 tem faixa de isenção maior (R$ 2.428,80) e desconto simplificado maior (R$ 607,20).',
     },
     {
       q: 'Se eu ficar isento na fonte, ainda preciso fazer a declaração anual?',
@@ -45,7 +41,7 @@ export default function HomePage() {
     },
     {
       q: 'O cálculo desta ferramenta considera o desconto do INSS?',
-      a: 'Sim. A calculadora calcula automaticamente o desconto progressivo do INSS oficial do trabalhador CLT antes de aplicar a tabela progressiva do Imposto de Renda.',
+      a: 'Sim. A calculadora aplica a tabela progressiva do INSS de 2026 do trabalhador CLT (teto de R$ 8.475,55) e usa o resultado como dedução, sempre comparando com o desconto simplificado para adotar o que for mais vantajoso.',
     },
     {
       q: 'Qual é a fonte oficial dos dados utilizados neste simulador?',
@@ -130,15 +126,15 @@ export default function HomePage() {
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>1️⃣</div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Digita seu Salário</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                  A ferramenta calcula automaticamente o desconto progressivo do INSS para obter a base tributável real.
+                  A ferramenta desconta o INSS progressivo de 2026 (ou o desconto simplificado, o que for maior) para chegar à base de cálculo.
                 </p>
               </div>
 
               <div className="card" style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>2️⃣</div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Aplica a Nova Isenção/Redutor</h3>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Aplica a tabela e o redutor</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                  Aplica isenção total até R$ 5.000 ou o redutor gradual `R$ 978,62 - (0,133145 x Renda)` até R$ 7.350.
+                  Apura o imposto pela tabela de 2026 e subtrai o redutor `R$ 978,62 - (0,133145 x rendimento bruto)`, válido até R$ 7.350 de salário bruto.
                 </p>
               </div>
 
@@ -159,19 +155,22 @@ export default function HomePage() {
             </h2>
             <div style={{ fontSize: '1rem', color: 'var(--color-text-main)', lineHeight: '1.7', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <p>
-                A reforma do IRPF (Lei nº 15.270/2025) trouxe alterações significativas no cálculo do imposto retido na fonte para os trabalhadores brasileiros:
+                A reforma do IRPF (Lei nº 15.270/2025) mudou o cálculo do imposto retido na fonte em três frentes. As faixas de R$ 5.000 e R$ 7.350 abaixo referem-se ao <strong>rendimento bruto mensal</strong>, e não à base de cálculo — o redutor da nova lei incide sobre o rendimento bruto, antes das deduções.
               </p>
               <ul style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <li>
-                  🟢 <strong>Isenção Total até R$ 5.000:</strong> Quem recebe rendimento tributável de até R$ 5.000,00 mensais não tem qualquer desconto de Imposto de Renda na fonte.
+                  🟢 <strong>Sem IRRF até R$ 5.000 de salário bruto:</strong> o imposto apurado pela tabela é integralmente anulado pelo redutor, resultando em retenção zero.
                 </li>
                 <li>
-                  🔵 <strong>Redução Gradual até R$ 7.350:</strong> Para quem ganha entre R$ 5.000,01 e R$ 7.350,00, a cobrança do imposto diminui gradativamente com a aplicação de um redutor mensal.
+                  🔵 <strong>Redutor decrescente até R$ 7.350 de salário bruto:</strong> o desconto vai diminuindo conforme o salário sobe e chega a zero exatamente em R$ 7.350,00.
                 </li>
                 <li>
-                  ⚪ <strong>Faixas Acima de R$ 7.350:</strong> Para quem ganha acima deste teto, o imposto continua sendo calculado com base na tabela progressiva mensal de 27,5%.
+                  ⚪ <strong>Acima de R$ 7.350 de salário bruto:</strong> sem redutor. O imposto segue a tabela progressiva de 2026, cuja faixa de isenção subiu para R$ 2.428,80 e cujo desconto simplificado subiu para R$ 607,20.
                 </li>
               </ul>
+              <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
+                A tabela progressiva continua incidindo sobre a <strong>base de cálculo</strong>, ou seja, o salário bruto menos o INSS, os dependentes e demais deduções legais — ou menos o desconto simplificado, quando este for mais vantajoso.
+              </p>
             </div>
           </section>
 
@@ -184,7 +183,7 @@ export default function HomePage() {
               {salaryExamples.map((item) => (
                 <Link
                   key={item.salary}
-                  href={`/imposto-de-renda-salario-${item.salary}`}
+                  href={`/${item.slug}`}
                   className="card"
                   style={{ display: 'block', textDecoration: 'none' }}
                 >
@@ -193,7 +192,7 @@ export default function HomePage() {
                     <span className="badge badge-reducao">{item.badge}</span>
                   </div>
                   <div style={{ fontSize: '0.9rem', color: 'var(--color-emerald-heading)', fontWeight: 700 }}>
-                    Economia: {item.saving}
+                    {item.savingLine}
                   </div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--color-brand-accent)', marginTop: '0.5rem', fontWeight: 600 }}>
                     Ver cálculo completo →
