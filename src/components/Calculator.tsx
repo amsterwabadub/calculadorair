@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { calculateTaxComparison, formatBRL, TaxCalculationResult } from '@/lib/tax-calculator';
 import { analytics, getSalaryBand, getSavingBand } from '@/lib/analytics';
 
@@ -9,33 +9,42 @@ interface CalculatorProps {
   autoFocus?: boolean;
 }
 
+const PRESETS = [3000, 4000, 5000, 6000, 7000, 8000, 10000];
+
+const BADGE = {
+  ISENTO_TOTAL: { cls: 'ci-badge ci-badge--isento', label: 'Sem IRRF em 2026' },
+  REDUCAO_PARCIAL: { cls: 'ci-badge ci-badge--parcial', label: 'Redutor parcial' },
+  FORA_DO_BENEFICIO: { cls: 'ci-badge ci-badge--padrao', label: 'Tabela progressiva' },
+} as const;
+
+const digits = (v: string) => v.replace(/[^\d]/g, '');
+const grouped = (d: string) => (d === '' ? '' : new Intl.NumberFormat('pt-BR').format(Number(d)));
+
 export default function Calculator({ initialSalary = 6000, autoFocus = false }: CalculatorProps) {
-  const [salaryInput, setSalaryInput] = useState<string>(initialSalary ? String(initialSalary) : '6000');
+  const uid = useId();
+  const [salaryInput, setSalaryInput] = useState<string>(String(initialSalary));
   const [dependents, setDependents] = useState<number>(0);
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
-  const [result, setResult] = useState<TaxCalculationResult>(() => calculateTaxComparison(initialSalary, { dependents }));
+  const [result, setResult] = useState<TaxCalculationResult>(() =>
+    calculateTaxComparison(initialSalary, { dependents: 0 }),
+  );
 
-  const presets = [3000, 4000, 5000, 5500, 6000, 7000, 8000, 10000];
+  const parsedSalary = Number(digits(salaryInput)) || 0;
 
-  const handleSalaryChange = (val: string) => {
-    // Clean non-numeric input except digits and comma/dot
-    const cleanVal = val.replace(/[^0-9.,]/g, '');
-    setSalaryInput(cleanVal);
-
+  const touch = () => {
     if (!hasInteracted) {
       setHasInteracted(true);
       analytics.trackCalculatorStart();
     }
   };
 
-  const parsedSalary = parseFloat(salaryInput.replace(/\./g, '').replace(',', '.')) || 0;
-
   useEffect(() => {
     const res = calculateTaxComparison(parsedSalary, { dependents });
     setResult(res);
 
     if (parsedSalary > 0) {
+      // Bands only — never the exact salary or any computed value.
       analytics.trackCalculatorComplete({
         salaryBand: getSalaryBand(parsedSalary),
         savingBand: getSavingBand(res.monthlySaving),
@@ -44,229 +53,188 @@ export default function Calculator({ initialSalary = 6000, autoFocus = false }: 
     }
   }, [parsedSalary, dependents]);
 
-  const handlePresetClick = (presetVal: number) => {
-    setSalaryInput(String(presetVal));
-    if (!hasInteracted) {
-      setHasInteracted(true);
-      analytics.trackCalculatorStart();
-    }
-  };
+  const badge = BADGE[result.benefitType];
+  const hasSalary = parsedSalary > 0;
+  const saves = result.monthlySaving > 0;
+
+  // Bar widths are relative to the larger of the two taxes, so the drop is visible.
+  const maxTax = Math.max(result.oldTax, result.newTax, 1);
+  const oldPct = Math.round((result.oldTax / maxTax) * 100);
+  const newPct = Math.round((result.newTax / maxTax) * 100);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Input Card */}
-      <div className="card" style={{ padding: '2rem' }}>
-        <label
-          htmlFor="salario-bruto-input"
-          style={{ display: 'block', fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-brand-primary)' }}
-        >
-          Informe seu salário mensal bruto (R$)
-        </label>
-
-        <div style={{ position: 'relative', marginBottom: '1rem' }}>
-          <span
-            style={{
-              position: 'absolute',
-              left: '1.25rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              color: 'var(--color-text-muted)',
-            }}
-          >
-            R$
-          </span>
-          <input
-            id="salario-bruto-input"
-            type="text"
-            className="input-field"
-            style={{ paddingLeft: '3.75rem' }}
-            value={salaryInput}
-            onChange={(e) => handleSalaryChange(e.target.value)}
-            placeholder="Ex: 5000"
-            autoFocus={autoFocus}
-          />
-        </div>
-
-        {/* Quick Preset Buttons */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-            Exemplos rápidos:
-          </span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {presets.map((p) => (
-              <button
-                key={p}
-                type="button"
-                className="btn btn-outline"
-                style={{
-                  padding: '0.375rem 0.75rem',
-                  fontSize: '0.85rem',
-                  backgroundColor: parsedSalary === p ? 'var(--color-brand-primary)' : 'transparent',
-                  color: parsedSalary === p ? '#ffffff' : 'var(--color-text-main)',
-                  borderColor: parsedSalary === p ? 'var(--color-brand-primary)' : 'var(--color-border-subtle)',
-                }}
-                onClick={() => handlePresetClick(p)}
-              >
-                R$ {p.toLocaleString('pt-BR')}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Advanced Options Accordion */}
-        <div style={{ borderTop: '1px solid var(--color-border-subtle)', paddingTop: '1rem' }}>
-          <button
-            type="button"
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--color-brand-accent)',
-              fontWeight: 600,
-              fontSize: '0.9rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.375rem',
-            }}
-            onClick={() => setShowAdvanced(!showAdvanced)}
-          >
-            <span>{showAdvanced ? '▼' : '►'}</span>
-            <span>Configurações avançadas (dependentes, INSS)</span>
-          </button>
-
-          {showAdvanced && (
-            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
-              <div>
-                <label htmlFor="dependents-select" style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-                  Número de dependentes
-                </label>
-                <select
-                  id="dependents-select"
-                  value={dependents}
-                  onChange={(e) => setDependents(Number(e.target.value))}
-                  style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-subtle)', width: '100%', maxWidth: '200px' }}
-                >
-                  <option value={0}>Nenhum dependente</option>
-                  <option value={1}>1 dependente (-R$ 189,59)</option>
-                  <option value={2}>2 dependentes (-R$ 379,18)</option>
-                  <option value={3}>3 dependentes (-R$ 568,77)</option>
-                  <option value={4}>4 ou mais dependentes</option>
-                </select>
-              </div>
-            </div>
-          )}
-        </div>
+    <div className="ci-calc" id="calculadora">
+      <div className="ci-calc__head">
+        <h2 className="ci-calc__title">Simule o seu IRRF mensal</h2>
       </div>
 
-      {/* Results Section */}
-      {parsedSalary > 0 && (
-        <div className="card card-hero-result" style={{ padding: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-            <div>
-              <span className="text-muted" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
-                Resultado do Cálculo IR 2026
-              </span>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-brand-primary)', marginTop: '0.25rem' }}>
-                {result.monthlySaving > 0 ? (
-                  <>Sua economia estimada: <span className="text-emerald">{formatBRL(result.monthlySaving)} / mês</span></>
-                ) : (
-                  <>Imposto mantido sem alteração</>
-                )}
-              </h2>
-            </div>
-
-            <div>
-              {result.benefitType === 'ISENTO_TOTAL' && <span className="badge badge-isento">🎉 Isenção Total 2026</span>}
-              {result.benefitType === 'REDUCAO_PARCIAL' && <span className="badge badge-reducao">📉 Redução Gradual 2026</span>}
-              {result.benefitType === 'FORA_DO_BENEFICIO' && <span className="badge badge-padrao">⚖️ Tabela Padrão</span>}
-            </div>
+      <div className="ci-calc__body">
+        <div>
+          <label className="ci-label" htmlFor="salario-bruto-input">
+            Salário bruto mensal
+          </label>
+          <div className="ci-money">
+            <span className="ci-money__prefix" aria-hidden="true">
+              R$
+            </span>
+            <input
+              id="salario-bruto-input"
+              className="ci-input"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              value={grouped(digits(salaryInput))}
+              placeholder="6.000"
+              autoFocus={autoFocus}
+              onChange={(e) => {
+                touch();
+                setSalaryInput(digits(e.target.value));
+              }}
+            />
           </div>
-
-          {/* Hero Savings Breakdown */}
-          <div
-            style={{
-              backgroundColor: result.monthlySaving > 0 ? 'var(--color-emerald-bg)' : '#f1f5f9',
-              border: `1px solid ${result.monthlySaving > 0 ? 'var(--color-emerald-border)' : '#cbd5e1'}`,
-              borderRadius: 'var(--radius-md)',
-              padding: '1.5rem',
-              marginBottom: '2rem',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '1.5rem',
-              textAlign: 'center',
-            }}
-          >
-            <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, display: 'block' }}>
-                Economia Mensal
-              </span>
-              <strong style={{ fontSize: '2rem', color: result.monthlySaving > 0 ? 'var(--color-emerald-heading)' : 'var(--color-text-main)' }}>
-                {formatBRL(result.monthlySaving)}
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, display: 'block' }}>
-                Economia Anual (12 meses)
-              </span>
-              <strong style={{ fontSize: '2rem', color: result.monthlySaving > 0 ? 'var(--color-emerald-heading)' : 'var(--color-text-main)' }}>
-                {formatBRL(result.annualSaving12Months)}
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 600, display: 'block' }}>
-                Economia com 13º Salário
-              </span>
-              <strong style={{ fontSize: '2rem', color: result.monthlySaving > 0 ? 'var(--color-emerald-heading)' : 'var(--color-text-main)' }}>
-                {formatBRL(result.annualSaving13Months)}
-              </strong>
-            </div>
-          </div>
-
-          {/* Comparison Grid */}
-          <div className="grid-2" style={{ marginBottom: '2rem' }}>
-            <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border-subtle)' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
-                Antes das novas regras (2025)
-              </span>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.5rem', color: '#dc2626' }}>
-                {formatBRL(result.oldTax)} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--color-text-muted)' }}>/mês</span>
-              </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-                Alíquota efetiva: {result.oldEffectiveRate}%
-              </div>
-            </div>
-
-            <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-emerald-border)' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-emerald-text)', fontWeight: 700, textTransform: 'uppercase' }}>
-                Com as regras de 2026
-              </span>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '0.5rem', color: 'var(--color-emerald-heading)' }}>
-                {formatBRL(result.newTax)} <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--color-text-muted)' }}>/mês</span>
-              </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-                Alíquota efetiva: {result.newEffectiveRate}%
-                {result.reducerAmount > 0 && ` (Redutor aplicado: -${formatBRL(result.reducerAmount)})`}
-              </div>
-            </div>
-          </div>
-
-          {/* Context Explanation */}
-          <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--color-brand-accent)', marginBottom: '2rem' }}>
-            <p style={{ fontSize: '0.95rem', color: 'var(--color-text-main)', lineHeight: '1.6' }}>
-              💡 <strong>Entenda seu resultado:</strong> {result.explanation}
-            </p>
-          </div>
-
-          {/* Disclaimer */}
-          <p style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', marginTop: '1.5rem', textAlign: 'center' }}>
-            {result.disclaimer}
-          </p>
         </div>
-      )}
+
+        <div className="ci-presets" role="group" aria-label="Exemplos rápidos de salário">
+          {PRESETS.map((p) => (
+            <button
+              key={p}
+              type="button"
+              className="ci-preset"
+              aria-pressed={parsedSalary === p}
+              onClick={() => {
+                touch();
+                setSalaryInput(String(p));
+              }}
+            >
+              R$ {p.toLocaleString('pt-BR')}
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          className="ci-adv"
+          aria-expanded={showAdvanced}
+          aria-controls={`${uid}-adv`}
+          onClick={() => setShowAdvanced((v) => !v)}
+        >
+          <span aria-hidden="true">{showAdvanced ? '▾' : '▸'}</span> Dependentes
+        </button>
+
+        {showAdvanced && (
+          <div id={`${uid}-adv`}>
+            <label className="ci-label" htmlFor={`${uid}-dep`}>
+              Número de dependentes
+            </label>
+            <select
+              id={`${uid}-dep`}
+              className="ci-select"
+              value={dependents}
+              onChange={(e) => {
+                touch();
+                setDependents(Number(e.target.value));
+              }}
+            >
+              <option value={0}>Nenhum</option>
+              <option value={1}>1 dependente (−R$ 189,59)</option>
+              <option value={2}>2 dependentes (−R$ 379,18)</option>
+              <option value={3}>3 dependentes (−R$ 568,77)</option>
+              <option value={4}>4 dependentes (−R$ 758,36)</option>
+            </select>
+          </div>
+        )}
+      </div>
+
+      {/* ------------------------------------------------------- result panel */}
+      <div className="ci-result" aria-live="polite">
+        <span className="ci-result__lead">Sua economia mensal em 2026</span>
+
+        {!hasSalary ? (
+          <p className="ci-result__none">Informe seu salário</p>
+        ) : saves ? (
+          <p className="ci-result__figure">
+            {formatBRL(result.monthlySaving)} <span>/mês</span>
+          </p>
+        ) : (
+          <p className="ci-result__none">Sem alteração em relação a 2025</p>
+        )}
+
+        <span className={badge.cls}>{badge.label}</span>
+
+        <div className="ci-compare">
+          <div className="ci-compare__col ci-compare__col--old">
+            <span className="ci-compare__year">IRRF em 2025</span>
+            <div className="ci-compare__val">{hasSalary ? formatBRL(result.oldTax) : '—'}</div>
+            <div className="ci-compare__rate">Alíquota efetiva {result.oldEffectiveRate}%</div>
+            <div className="ci-compare__bar">
+              <i style={{ width: `${hasSalary ? oldPct : 0}%` }} />
+            </div>
+          </div>
+
+          <div className="ci-compare__arrow" aria-hidden="true">
+            →
+          </div>
+
+          <div className="ci-compare__col ci-compare__col--new">
+            <span className="ci-compare__year">IRRF em 2026</span>
+            <div className="ci-compare__val">{hasSalary ? formatBRL(result.newTax) : '—'}</div>
+            <div className="ci-compare__rate">Alíquota efetiva {result.newEffectiveRate}%</div>
+            <div className="ci-compare__bar">
+              <i style={{ width: `${hasSalary ? newPct : 0}%` }} />
+            </div>
+          </div>
+        </div>
+
+        <div className="ci-secondary">
+          <div>
+            Economia anual
+            <b>{hasSalary ? formatBRL(result.annualSaving12Months) : '—'}</b>
+          </div>
+          <div>
+            Com o 13º
+            <b>{hasSalary ? formatBRL(result.annualSaving13Months) : '—'}</b>
+          </div>
+        </div>
+
+        <details className="ci-break">
+          <summary>Ver o cálculo passo a passo</summary>
+          <dl>
+            <div>
+              <dt>INSS (tabela 2026)</dt>
+              <dd>−{formatBRL(result.inssDeduction)}</dd>
+            </div>
+            {result.dependentDeduction > 0 && (
+              <div>
+                <dt>Dedução por dependentes</dt>
+                <dd>−{formatBRL(result.dependentDeduction)}</dd>
+              </div>
+            )}
+            <div>
+              <dt>Base de cálculo 2026</dt>
+              <dd>{formatBRL(result.taxableIncome)}</dd>
+            </div>
+            <div>
+              <dt>Imposto pela tabela 2026</dt>
+              <dd>{formatBRL(result.taxBeforeRedutor)}</dd>
+            </div>
+            <div>
+              <dt>Redutor (Lei 15.270/2025)</dt>
+              <dd>−{formatBRL(result.reducerAmount)}</dd>
+            </div>
+            <div>
+              <dt>IRRF retido em 2026</dt>
+              <dd>{formatBRL(result.newTax)}</dd>
+            </div>
+          </dl>
+          <p className="ci-note">{result.explanation}</p>
+        </details>
+
+        <p className="ci-note">
+          🔒 O cálculo acontece no seu navegador. Nenhum valor digitado é enviado ou armazenado.
+          {' '}
+          {result.disclaimer}
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Salario e deducoes">
+  <rect x="11" y="7" width="42" height="50" rx="5" fill="#FFFFFF" stroke="#1E5F8C" stroke-width="2.5"/>
+  <rect x="18" y="15" width="28" height="9" rx="2" fill="#FDF3DC" stroke="#E8A317" stroke-width="2"/>
+  <path d="M18 32h20M18 39h14M18 46h17" stroke="#1E5F8C" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+  <rect x="42" y="30" width="4" height="6"  rx="1" fill="#12715A"/>
+  <rect x="42" y="37" width="4" height="9"  rx="1" fill="#12715A" opacity="0.7"/>
+  <rect x="42" y="47" width="4" height="4"  rx="1" fill="#12715A" opacity="0.45"/>
+</svg>

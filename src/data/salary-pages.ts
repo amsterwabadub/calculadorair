@@ -26,6 +26,8 @@ export interface SalaryExample {
   slug: string;
   label: string;
   badge: string;
+  /** Badge modifier class, so the card colour matches the benefit type. */
+  badgeClass: string;
   /** Human-readable savings line, derived from the engine. */
   savingLine: string;
   monthlySaving: number;
@@ -37,6 +39,12 @@ const BADGE_BY_BENEFIT: Record<BenefitType, string> = {
   ISENTO_TOTAL: 'Sem IRRF em 2026',
   REDUCAO_PARCIAL: 'Redutor parcial',
   FORA_DO_BENEFICIO: 'Tabela progressiva',
+};
+
+const BADGE_CLASS_BY_BENEFIT: Record<BenefitType, string> = {
+  ISENTO_TOTAL: 'ci-badge ci-badge--isento',
+  REDUCAO_PARCIAL: 'ci-badge ci-badge--parcial',
+  FORA_DO_BENEFICIO: 'ci-badge ci-badge--padrao',
 };
 
 /**
@@ -56,6 +64,7 @@ export function buildSalaryExample(salary: number): SalaryExample {
     slug: salarySlug(salary),
     label: `R$ ${salary.toLocaleString('pt-BR')}`,
     badge: BADGE_BY_BENEFIT[calc.benefitType],
+    badgeClass: BADGE_CLASS_BY_BENEFIT[calc.benefitType],
     savingLine,
     monthlySaving: calc.monthlySaving,
     annualSaving12Months: calc.annualSaving12Months,

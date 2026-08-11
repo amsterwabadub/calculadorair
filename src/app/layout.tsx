@@ -1,8 +1,23 @@
 import type { Metadata } from 'next';
+import { Epilogue, IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+
+const epilogue = Epilogue({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  variable: '--font-epilogue',
+  display: 'swap',
+});
+
+const plex = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-plex',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   // Yandex Webmaster ownership verification. The host is already registered
@@ -50,7 +65,7 @@ export default function RootLayout({
   const ymId = process.env.NEXT_PUBLIC_YM_ID || '111448611';
 
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${epilogue.variable} ${plex.variable}`}>
       <head>
         <script
           async
