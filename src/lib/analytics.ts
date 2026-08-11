@@ -27,20 +27,42 @@ export interface CommercialCtaParams {
 const BASE = { market: 'BR', country: 'br', calculator_type: 'irrf_monthly' };
 
 /**
- * Events go onto `window.dataLayer` in the standard gtag shim shape rather than
- * requiring `window.gtag` to already exist. The GA4 config script is inline in
- * <head>, so gtag is normally ready — but queueing means an event fired during
- * hydration can never be silently discarded.
+ * Send one GA4 event.
+ *
+ * The previous implementation pushed `arguments` from a function declared with
+ * a rest parameter (`function f(..._args) { dataLayer.push(arguments) }`). Once
+ * SWC transpiled that for production the `arguments` object no longer held the
+ * call's values, so every event reached `window.dataLayer` as an EMPTY entry and
+ * GA4 received nothing. Verified on production 2026-08-11: dataLayer held
+ * `["js",…]`, `["config","G-KLNEN6LL8G"]` and then `[]`, `[]`.
+ *
+ * `window.gtag` is defined by the inline GA4 snippet in <head>, so the direct
+ * call is the reliable path. The fallback builds a genuine `arguments` object
+ * from a plain (non-rest) function expression, which is the shape gtag.js reads,
+ * so an event fired before the snippet runs is still queued rather than lost.
  */
-function dataLayerPush(..._args: unknown[]) {
-  if (typeof window === 'undefined') return;
-  window.dataLayer = window.dataLayer || [];
-  // eslint-disable-next-line prefer-rest-params
-  (window.dataLayer as unknown[]).push(arguments);
-}
-
 function sendGAEvent(eventName: string, eventParams?: Record<string, unknown>) {
-  dataLayerPush('event', eventName, eventParams);
+  if (typeof window === 'undefined') return;
+
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', eventName, eventParams);
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  const queue = window.dataLayer as unknown[];
+  // Named (simple) parameters on purpose: a rest parameter makes the parameter
+  // list "non-simple", which is what broke `arguments` here in the first place.
+  // eslint-disable-next-line func-names
+  const enqueue = function (
+    _command: string,
+    _name: string,
+    _params?: Record<string, unknown>,
+  ) {
+    // eslint-disable-next-line prefer-rest-params
+    queue.push(arguments);
+  };
+  enqueue('event', eventName, eventParams);
 }
 
 export const analytics = {
