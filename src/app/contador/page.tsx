@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import TrustBanner from '@/components/TrustBanner';
 
 /**
@@ -30,6 +31,16 @@ export default function AjudaDeclaracaoPage() {
             Esta calculadora é uma ferramenta independente de simulação. Não prestamos serviços de
             contabilidade e não intermediamos atendimento profissional.
           </p>
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <Image
+            src="/graphics/guidance-desk.svg"
+            alt=""
+            width={900}
+            height={675}
+            style={{ width: '100%', height: 'auto', borderRadius: 'var(--radius-lg)', border: '1px solid var(--linha)' }}
+          />
         </div>
 
         <div style={{ marginBottom: '2rem' }}>

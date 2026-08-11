@@ -44,19 +44,19 @@ const GUIDES = [
 const STEPS = [
   {
     n: 'Passo 1',
-    icon: '/icons/calculator.svg',
+    icon: '/icons/step-salario.webp',
     title: 'Informe o salário bruto',
     text: 'Descontamos o INSS progressivo de 2026 — ou o desconto simplificado de R$ 607,20, o que for maior — para chegar à base de cálculo.',
   },
   {
     n: 'Passo 2',
-    icon: '/icons/irrf.svg',
+    icon: '/icons/step-irrf.webp',
     title: 'Aplicamos a tabela e o redutor',
     text: 'A tabela progressiva de 2026 incide sobre a base de cálculo. O redutor da Lei nº 15.270/2025 incide sobre os rendimentos tributáveis, antes das deduções.',
   },
   {
     n: 'Passo 3',
-    icon: '/icons/savings.svg',
+    icon: '/icons/step-economia.webp',
     title: 'Compare 2025 com 2026',
     text: 'Mostramos o imposto pelas duas regras lado a lado e a diferença que sobra no seu bolso por mês e por ano.',
   },
@@ -217,7 +217,7 @@ export default function HomePage() {
           <div className="ci-grid-3">
             {STEPS.map((s) => (
               <div className="ci-step" key={s.title}>
-                <Image src={s.icon} alt="" width={44} height={44} />
+                <Image className="ci-step__icon" src={s.icon} alt="" width={176} height={176} />
                 <span className="ci-step__n">{s.n}</span>
                 <h3>{s.title}</h3>
                 <p>{s.text}</p>

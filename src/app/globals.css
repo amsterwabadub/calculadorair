@@ -453,10 +453,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 .ci-grid-2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media (min-width: 760px) { .ci-grid-2 { grid-template-columns: repeat(2,1fr); } .ci-grid-3 { grid-template-columns: repeat(3,1fr); } }
 
-.ci-step { background: #fff; border: 1px solid var(--linha); border-radius: var(--radius-lg); padding: 22px; }
+.ci-step { background: #fff; border: 1px solid var(--linha); border-radius: var(--radius-lg); padding: 24px; }
 .ci-section--tint .ci-step { background: var(--areia); }
-.ci-step img { width: 44px; height: 44px; }
-.ci-step h3 { font-size: 1.02rem; font-weight: 700; color: var(--verde-mata); margin: 12px 0 6px; }
+.ci-step__icon { width: 88px; height: 88px; border-radius: 20px; display: block; box-shadow: 0 6px 18px rgb(11 79 63 / 0.18); }
+.ci-step h3 { font-size: 1.02rem; font-weight: 700; color: var(--verde-mata); margin: 10px 0 6px; }
 .ci-step p { font-size: .9rem; color: var(--concreto); line-height: 1.6; }
 .ci-step__n { font-size: .74rem; font-weight: 800; color: var(--amarelo-ipe); letter-spacing: .08em; }
 
