@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useId } from 'react';
+import { useState, useEffect, useId, useRef } from 'react';
 import { calculateTaxComparison, formatBRL, TaxCalculationResult } from '@/lib/tax-calculator';
 import { analytics, getSalaryBand, getSavingBand } from '@/lib/analytics';
+import CommercialCTA from '@/components/CommercialCTA';
 
 interface CalculatorProps {
   initialSalary?: number;
@@ -39,19 +40,32 @@ export default function Calculator({ initialSalary = 6000, autoFocus = false }: 
     }
   };
 
+  // Guards completion tracking. Without this the effect below runs on mount
+  // with the default salary and calculator_complete becomes a page-load proxy:
+  // that is exactly what inflated the "conversions" number.
+  const lastTracked = useRef<string>('');
+
   useEffect(() => {
     const res = calculateTaxComparison(parsedSalary, { dependents });
     setResult(res);
 
-    if (parsedSalary > 0) {
-      // Bands only — never the exact salary or any computed value.
-      analytics.trackCalculatorComplete({
-        salaryBand: getSalaryBand(parsedSalary),
-        savingBand: getSavingBand(res.monthlySaving),
-        benefitType: res.benefitType,
-      });
-    }
-  }, [parsedSalary, dependents]);
+    if (!hasInteracted || parsedSalary <= 0) return;
+
+    // Bands only — never the exact salary or any computed value.
+    const band = getSalaryBand(parsedSalary);
+    const saving = getSavingBand(res.monthlySaving);
+    const signature = `${band}|${saving}|${res.benefitType}`;
+    // Re-renders that do not change the outcome must not emit a second event.
+    if (signature === lastTracked.current) return;
+    lastTracked.current = signature;
+
+    analytics.trackCalculatorComplete({
+      salaryBand: band, savingBand: saving, benefitType: res.benefitType,
+    });
+    analytics.trackResultView({
+      salaryBand: band, savingBand: saving, benefitType: res.benefitType,
+    });
+  }, [parsedSalary, dependents, hasInteracted]);
 
   const badge = BADGE[result.benefitType];
   const hasSalary = parsedSalary > 0;
@@ -195,6 +209,8 @@ export default function Calculator({ initialSalary = 6000, autoFocus = false }: 
             <b>{hasSalary ? formatBRL(result.annualSaving13Months) : '—'}</b>
           </div>
         </div>
+
+        <CommercialCTA landingPage={typeof window === 'undefined' ? '' : window.location.pathname} />
 
         <details className="ci-break">
           <summary>Ver o cálculo passo a passo</summary>

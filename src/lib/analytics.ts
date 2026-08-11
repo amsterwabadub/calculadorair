@@ -18,17 +18,35 @@ export interface SalaryPageViewParams {
   salaryValue: number;
 }
 
-// Helper to safely send GA4 events
+export interface CommercialCtaParams {
+  offerState: 'live' | 'waiting_for_offer';
+  landingPage: string;
+  destinationHost?: string;
+}
+
+const BASE = { market: 'BR', country: 'br', calculator_type: 'irrf_monthly' };
+
+/**
+ * Events go onto `window.dataLayer` in the standard gtag shim shape rather than
+ * requiring `window.gtag` to already exist. The GA4 config script is inline in
+ * <head>, so gtag is normally ready — but queueing means an event fired during
+ * hydration can never be silently discarded.
+ */
+function dataLayerPush(..._args: unknown[]) {
+  if (typeof window === 'undefined') return;
+  window.dataLayer = window.dataLayer || [];
+  // eslint-disable-next-line prefer-rest-params
+  (window.dataLayer as unknown[]).push(arguments);
+}
+
 function sendGAEvent(eventName: string, eventParams?: Record<string, unknown>) {
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', eventName, eventParams);
-  }
+  dataLayerPush('event', eventName, eventParams);
 }
 
 export const analytics = {
   trackCalculatorStart: () => {
     if (typeof window !== 'undefined') {
-      sendGAEvent('calculator_start');
+      sendGAEvent('calculator_start', { ...BASE });
       window.dispatchEvent(new CustomEvent('analytics_calculator_start'));
     }
   },
@@ -36,6 +54,7 @@ export const analytics = {
   trackCalculatorComplete: (params: CalculatorCompleteParams) => {
     if (typeof window !== 'undefined') {
       sendGAEvent('calculator_complete', {
+        ...BASE,
         salary_band: params.salaryBand,
         monthly_saving_band: params.savingBand,
         benefit_type: params.benefitType,
@@ -43,6 +62,38 @@ export const analytics = {
       window.dispatchEvent(
         new CustomEvent('analytics_calculator_complete', { detail: params })
       );
+    }
+  },
+
+  trackResultView: (params: CalculatorCompleteParams) => {
+    if (typeof window !== 'undefined') {
+      sendGAEvent('result_view', {
+        ...BASE,
+        salary_band: params.salaryBand,
+        monthly_saving_band: params.savingBand,
+        benefit_type: params.benefitType,
+      });
+    }
+  },
+
+  trackCommercialCtaView: (p: CommercialCtaParams) => {
+    if (typeof window !== 'undefined') {
+      sendGAEvent('commercial_cta_view', {
+        ...BASE, offer_state: p.offerState, landing_page: p.landingPage,
+      });
+    }
+  },
+
+  trackCommercialCtaClick: (p: CommercialCtaParams) => {
+    if (typeof window !== 'undefined') {
+      sendGAEvent('commercial_cta_click', {
+        ...BASE, offer_state: p.offerState, landing_page: p.landingPage,
+      });
+      if (p.destinationHost) {
+        sendGAEvent('affiliate_redirect', {
+          ...BASE, landing_page: p.landingPage, destination_host: p.destinationHost,
+        });
+      }
     }
   },
 
@@ -86,6 +137,6 @@ export function getSavingBand(saving: number): string {
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
-    dataLayer?: Record<string, unknown>[];
+    dataLayer?: unknown[];
   }
 }

@@ -518,3 +518,15 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
   .ci-compare__arrow { transform: rotate(90deg); height: 16px; }
   .ci-facts li { font-size: .78rem; padding: 7px 11px; }
 }
+
+/* ---- commercial CTA (first measurable commercial surface) ---------------- */
+.ci-commercial { margin-top: 14px; padding: 16px 18px; text-align: center;
+  background: #fff; border: 1px dashed var(--color-emerald-border); border-radius: var(--radius-md); }
+.ci-commercial__blurb { font-size: .9rem; color: var(--concreto); margin-bottom: 10px; }
+.ci-commercial__btn { display: inline-flex; align-items: center; justify-content: center;
+  padding: 11px 18px; border-radius: var(--radius-md); font-weight: 700; font-size: .92rem;
+  background: var(--verde-cerrado); color: #fff; border: 0; cursor: pointer; text-decoration: none; }
+.ci-commercial__btn:hover { background: var(--verde-mata); text-decoration: none; color: #fff; }
+.ci-commercial__btn--pending { background: #fff; color: var(--verde-cerrado);
+  border: 1px solid var(--color-emerald-border); }
+.ci-commercial__pending { margin-top: 9px; font-size: .74rem; color: var(--concreto); opacity: .9; }
