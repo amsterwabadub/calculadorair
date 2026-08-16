@@ -26,8 +26,17 @@ export interface CommercialCtaParams {
 
 const BASE = { market: 'BR', country: 'br', calculator_type: 'irrf_monthly' };
 
+/** Yandex Metrika counter — the same expression src/app/layout.tsx uses for
+    `ym(<id>, "init", …)`. */
+const YM_ID = Number(process.env.NEXT_PUBLIC_YM_ID || '111448611');
+
 /**
- * Send one GA4 event.
+ * Send one product event to BOTH analytics stacks.
+ *
+ * Until now this file reached GA4 only, so Metrika counter 111448611 recorded
+ * page traffic but could never record a product event — it had zero goals and
+ * zero goal reaches. One user action now reaches both stacks from this single
+ * call site, so no business logic is duplicated and no caller changes.
  *
  * The previous implementation pushed `arguments` from a function declared with
  * a rest parameter (`function f(..._args) { dataLayer.push(arguments) }`). Once
@@ -41,8 +50,12 @@ const BASE = { market: 'BR', country: 'br', calculator_type: 'irrf_monthly' };
  * from a plain (non-rest) function expression, which is the shape gtag.js reads,
  * so an event fired before the snippet runs is still queued rather than lost.
  */
-function sendGAEvent(eventName: string, eventParams?: Record<string, unknown>) {
+function sendEvent(eventName: string, eventParams?: Record<string, unknown>) {
   if (typeof window === 'undefined') return;
+
+  // Yandex Metrika. Same counter expression as the init snippet in
+  // src/app/layout.tsx; NEXT_PUBLIC_* is inlined at build time.
+  if (YM_ID) window.ym?.(YM_ID, 'reachGoal', eventName, eventParams);
 
   if (typeof window.gtag === 'function') {
     window.gtag('event', eventName, eventParams);
@@ -68,14 +81,14 @@ function sendGAEvent(eventName: string, eventParams?: Record<string, unknown>) {
 export const analytics = {
   trackCalculatorStart: () => {
     if (typeof window !== 'undefined') {
-      sendGAEvent('calculator_start', { ...BASE });
+      sendEvent('calculator_start', { ...BASE });
       window.dispatchEvent(new CustomEvent('analytics_calculator_start'));
     }
   },
 
   trackCalculatorComplete: (params: CalculatorCompleteParams) => {
     if (typeof window !== 'undefined') {
-      sendGAEvent('calculator_complete', {
+      sendEvent('calculator_complete', {
         ...BASE,
         salary_band: params.salaryBand,
         monthly_saving_band: params.savingBand,
@@ -89,7 +102,7 @@ export const analytics = {
 
   trackResultView: (params: CalculatorCompleteParams) => {
     if (typeof window !== 'undefined') {
-      sendGAEvent('result_view', {
+      sendEvent('result_view', {
         ...BASE,
         salary_band: params.salaryBand,
         monthly_saving_band: params.savingBand,
@@ -100,7 +113,7 @@ export const analytics = {
 
   trackCommercialCtaView: (p: CommercialCtaParams) => {
     if (typeof window !== 'undefined') {
-      sendGAEvent('commercial_cta_view', {
+      sendEvent('commercial_cta_view', {
         ...BASE, offer_state: p.offerState, landing_page: p.landingPage,
       });
     }
@@ -108,11 +121,11 @@ export const analytics = {
 
   trackCommercialCtaClick: (p: CommercialCtaParams) => {
     if (typeof window !== 'undefined') {
-      sendGAEvent('commercial_cta_click', {
+      sendEvent('commercial_cta_click', {
         ...BASE, offer_state: p.offerState, landing_page: p.landingPage,
       });
       if (p.destinationHost) {
-        sendGAEvent('affiliate_redirect', {
+        sendEvent('affiliate_redirect', {
           ...BASE, landing_page: p.landingPage, destination_host: p.destinationHost,
         });
       }
@@ -122,7 +135,7 @@ export const analytics = {
   trackSalaryPageView: (params: SalaryPageViewParams) => {
     if (typeof window !== 'undefined') {
       const salaryBand = getSalaryBand(params.salaryValue);
-      sendGAEvent('salary_page_view', {
+      sendEvent('salary_page_view', {
         salary_band: salaryBand,
         page_slug: params.salarySlug,
       });
@@ -160,5 +173,6 @@ declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
     dataLayer?: unknown[];
+    ym?: (...args: unknown[]) => void;
   }
 }

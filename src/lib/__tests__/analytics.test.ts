@@ -13,17 +13,19 @@ import { analytics, getSalaryBand, getSavingBand } from '../analytics';
 
 declare const globalThis: any;
 
-function installWindow(withGtag: boolean) {
+function installWindow(withGtag: boolean, withYm = false) {
   const calls: any[] = [];
+  const ymCalls: any[] = [];
   const w: any = {
     dataLayer: [],
     dispatchEvent: () => true,
     CustomEvent: class { constructor(public type: string, public init?: any) {} },
   };
   if (withGtag) w.gtag = (...args: any[]) => calls.push(args);
+  if (withYm) w.ym = (...args: any[]) => ymCalls.push(args);
   globalThis.window = w;
   globalThis.CustomEvent = w.CustomEvent;
-  return { w, calls };
+  return { w, calls, ymCalls };
 }
 
 afterEach(() => {
@@ -98,5 +100,47 @@ describe('GA4 transmission', () => {
         market: 'BR', country: 'br', calculator_type: 'irrf_monthly',
       });
     }
+  });
+});
+
+/**
+ * The Metrika half of the same call site. The defect these lock down: this file
+ * reached GA4 only, so counter 111448611 had zero goals and zero goal reaches
+ * while GA4 counted 113 calculator_complete over the same window.
+ */
+describe('Yandex Metrika transmission', () => {
+  it('sends the same event name and params as a reachGoal', () => {
+    const { calls, ymCalls } = installWindow(true, true);
+    analytics.trackCalculatorComplete({
+      salaryBand: getSalaryBand(7500),
+      savingBand: getSavingBand(250),
+      benefitType: 'REDUCAO_PARCIAL',
+    });
+    expect(ymCalls).toHaveLength(1);
+    expect(ymCalls[0][0]).toBe(111448611);
+    expect(ymCalls[0][1]).toBe('reachGoal');
+    // The goal identifier must equal the GA4 event name, or the Metrika goal
+    // condition configured against it never matches.
+    expect(ymCalls[0][2]).toBe(calls[0][1]);
+    expect(ymCalls[0][3]).toMatchObject({ market: 'BR', salary_band: 'R$ 7.351 - R$ 10.000' });
+  });
+
+  it('never sends a raw amount to Metrika either', () => {
+    const { ymCalls } = installWindow(true, true);
+    analytics.trackCalculatorComplete({
+      salaryBand: getSalaryBand(7500),
+      savingBand: getSavingBand(250),
+      benefitType: 'REDUCAO_PARCIAL',
+    });
+    const flat = JSON.stringify(ymCalls[0][3]);
+    expect(flat).not.toContain('7500');
+    expect(flat).not.toContain('250');
+  });
+
+  it('still delivers to GA4 when Metrika is absent (blocked or not yet loaded)', () => {
+    const { calls, ymCalls } = installWindow(true, false);
+    analytics.trackCalculatorStart();
+    expect(ymCalls).toHaveLength(0);
+    expect(calls.map((c) => c[1])).toEqual(['calculator_start']);
   });
 });
