@@ -6,26 +6,8 @@ import { calculateTaxComparison, formatBRL } from '@/lib/tax-calculator';
 import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
 
 import { SALARY_VALUES, SALARY_BY_SLUG, salarySlug } from '@/data/salary-pages';
+import { GUIDE_PAGES, GUIDE_SLUGS } from '@/data/guide-pages';
 
-// Guide pages data definitions
-const GUIDE_PAGES: Record<string, { title: string; description: string }> = {
-  'nova-tabela-imposto-de-renda-2026': {
-    title: 'Nova Tabela Imposto de Renda 2026 — Alíquotas e Faixas Completas',
-    description: 'Confira a nova tabela progressiva do Imposto de Renda 2026 (Lei nº 15.270/2025). Entenda a faixa de isenção até R$ 5.000,00 e a fórmula do redutor gradual.',
-  },
-  'isencao-imposto-de-renda-2026': {
-    title: 'Isenção do Imposto de Renda 2026 até R$ 5.000 — Quem Tem Direito?',
-    description: 'Entenda como funciona a isenção do Imposto de Renda para quem ganha até R$ 5.000 em 2026. Regras oficiais, critérios da Receita Federal e impactos no salário.',
-  },
-  'calculadora-irrf-2026': {
-    title: 'Calculadora IRRF 2026 — Simulação de Imposto de Renda Retido na Fonte',
-    description: 'Calcule o Imposto de Renda Retido na Fonte (IRRF) em 2026 com o desconto oficial do INSS e a nova tabela da Lei 15.270/2025.',
-  },
-  'quanto-vou-economizar-imposto-de-renda-2026': {
-    title: 'Quanto Vou Economizar no Imposto de Renda em 2026? Guia Comparativo',
-    description: 'Descubra exatamente quanto dinheiro vai sobrar no seu bolso por mês e por ano com a reforma do Imposto de Renda 2026 comparando a tabela antiga com a nova.',
-  },
-};
 
 const SALARY_LIST = [...SALARY_VALUES].sort((a, b) => a - b);
 
@@ -35,7 +17,7 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const salarySlugs = SALARY_VALUES.map((s) => ({ slug: salarySlug(s) }));
-  const guideSlugs = Object.keys(GUIDE_PAGES).map((slug) => ({ slug }));
+  const guideSlugs = GUIDE_SLUGS.map((slug) => ({ slug }));
   return [...salarySlugs, ...guideSlugs];
 }
 
@@ -69,8 +51,8 @@ export async function generateMetadata({ params }: PageProps) {
     const pageTitle = `Quem ganha R$ ${salary.toLocaleString('pt-BR')} paga quanto de IR em 2026? ${formatBRL(calc.newTax)}/mês`;
     const pageDesc =
       calc.monthlySaving > 0
-        ? `Salário de R$ ${salary.toLocaleString('pt-BR')}: o IRRF em 2026 é de ${formatBRL(calc.newTax)}/mês, contra ${formatBRL(calc.oldTax)} pela tabela de 2025 — ${formatBRL(calc.monthlySaving)} a menos por mês e ${formatBRL(calc.annualSaving12Months)} no ano. Veja o cálculo passo a passo com INSS e redutor.`
-        : `Salário de R$ ${salary.toLocaleString('pt-BR')}: o IRRF em 2026 é de ${formatBRL(calc.newTax)}/mês. Veja o cálculo passo a passo, com o desconto do INSS de ${formatBRL(calc.inssDeduction)} e a base de cálculo aplicada.`;
+        ? `Salário de R$ ${salary.toLocaleString('pt-BR')}: o IRRF em 2026 é de ${formatBRL(calc.newTax)}/mês e o líquido fica em ${formatBRL(calc.netSalary2026)}. Pela tabela de 2025 o imposto seria ${formatBRL(calc.oldTax)} — ${formatBRL(calc.monthlySaving)} a menos por mês, ${formatBRL(calc.annualSaving12Months)} no ano.`
+        : `Salário de R$ ${salary.toLocaleString('pt-BR')}: o IRRF em 2026 é de ${formatBRL(calc.newTax)}/mês, o INSS ${formatBRL(calc.inssDeduction)} e o líquido ${formatBRL(calc.netSalary2026)}. Veja o cálculo passo a passo com a base aplicada.`;
 
     return {
       title: pageTitle,
@@ -94,62 +76,102 @@ export default async function DynamicSlugPage({ params }: PageProps) {
   // Render Guide Page
   if (GUIDE_PAGES[slug]) {
     const guide = GUIDE_PAGES[slug];
+    const guideFaqLd = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: guide.faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    };
+    const guideCrumbLd = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://calculadorair.online' },
+        { '@type': 'ListItem', position: 2, name: guide.h1, item: `https://calculadorair.online/${slug}` },
+      ],
+    };
+
     return (
-      <div style={{ padding: '2rem 0' }}>
-        <div className="container-narrow">
-          <div style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-            <Link href="/">Início</Link> &gt; <span>{guide.title}</span>
-          </div>
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(guideCrumbLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(guideFaqLd) }} />
 
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--color-brand-primary)', marginBottom: '1rem' }}>
-            {guide.title}
-          </h1>
-
-          <p style={{ fontSize: '1.1rem', color: 'var(--color-text-muted)', marginBottom: '2rem', lineHeight: '1.6' }}>
-            {guide.description}
-          </p>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <TrustBanner />
-          </div>
-
-          <div className="card" style={{ padding: '2rem', marginBottom: '2rem' }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '1rem' }}>
-              Simular seu salário na nova lei de 2026
-            </h2>
-            <Calculator autoFocus={false} />
-          </div>
-
-          <article className="card" style={{ padding: '2rem', lineHeight: '1.8', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <h2>Como funciona a reforma do Imposto de Renda em 2026</h2>
-            <p>
-              A Lei nº 15.270/2025 reformulou o Imposto de Renda Retido na Fonte (IRRF) a partir de 1º de janeiro de 2026. O objetivo principal foi zerar a retenção para quem tem rendimentos tributáveis de até R$ 5.000,00 por mês e criar uma transição suave para as faixas seguintes.
-            </p>
-            <h3>Como o cálculo funciona</h3>
-            <ol>
-              <li>
-                <strong>Base de cálculo:</strong> salário bruto menos INSS, dependentes e demais deduções legais — ou menos o desconto simplificado de R$ 607,20, quando este for maior.
-              </li>
-              <li>
-                <strong>Imposto pela tabela de 2026:</strong> a tabela progressiva incide sobre essa base, com isenção até R$ 2.428,80 e alíquotas de 7,5% a 27,5%.
-              </li>
-              <li>
-                <strong>Redutor:</strong> calculado sobre os <strong>rendimentos tributáveis sujeitos à incidência mensal</strong> — o salário tributável antes das deduções — e não sobre a base de cálculo, pela fórmula `R$ 978,62 - (0,133145 x rendimentos tributáveis)`. Ele é subtraído do imposto apurado e nunca o ultrapassa.
-              </li>
-            </ol>
-            <h3>Faixas do redutor (sobre os rendimentos tributáveis mensais)</h3>
-            <ul>
-              <li><strong>Até R$ 5.000,00:</strong> o redutor anula todo o imposto apurado — retenção de R$ 0,00.</li>
-              <li><strong>De R$ 5.000,01 a R$ 7.350,00:</strong> redutor decrescente, de R$ 312,89 até zero.</li>
-              <li><strong>Acima de R$ 7.350,00:</strong> sem redutor; vale apenas a tabela progressiva de 2026.</li>
-            </ul>
-
-            <div style={{ background: 'var(--color-emerald-bg)', border: '1px solid var(--color-emerald-border)', padding: '1rem', borderRadius: 'var(--radius-md)', marginTop: '1rem' }}>
-              <strong>Dica de Economia:</strong> Para saber exatamente o efeito no seu contracheque, utilize nossa calculadora interativa no topo desta página.
+        <div style={{ padding: '2rem 0' }}>
+          <div className="container-narrow">
+            <div style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+              <Link href="/">Início</Link> &gt; <span>{guide.h1}</span>
             </div>
-          </article>
+
+            <h1 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.4rem)', fontWeight: 800, color: 'var(--color-brand-primary)', lineHeight: 1.15 }}>
+              {guide.h1}
+            </h1>
+            <p style={{ fontSize: '1.1rem', color: 'var(--color-text-muted)', margin: '0.75rem 0 2rem', lineHeight: 1.6 }}>
+              {guide.lead}
+            </p>
+
+            <div style={{ marginBottom: '2rem' }}>
+              <TrustBanner />
+            </div>
+
+            <div className="card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '1rem' }}>
+                Simule com o seu salário
+              </h2>
+              <Calculator initialSalary={guide.calculatorSalary} autoFocus={false} />
+            </div>
+
+            {guide.sections.map((sec) => (
+              <article
+                key={sec.h2}
+                className="card"
+                style={{ padding: '2rem', lineHeight: 1.8, display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}
+              >
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 700 }}>{sec.h2}</h2>
+                {sec.paragraphs.map((t) => (
+                  <p key={t.slice(0, 40)} style={{ margin: 0 }}>{t}</p>
+                ))}
+                {sec.list ? (
+                  <ol style={{ paddingLeft: '1.4rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', margin: 0 }}>
+                    {sec.list.map((li) => (
+                      <li key={li.term}>
+                        <strong>{li.term}:</strong> {li.detail}
+                      </li>
+                    ))}
+                  </ol>
+                ) : null}
+              </article>
+            ))}
+
+            <section className="card" style={{ padding: '2rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 700 }}>Perguntas frequentes</h2>
+              {guide.faq.map((f) => (
+                <div key={f.q}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.35rem' }}>{f.q}</h3>
+                  <p style={{ margin: 0, lineHeight: 1.7, color: 'var(--color-text-muted)' }}>{f.a}</p>
+                </div>
+              ))}
+            </section>
+
+            <section className="card" style={{ padding: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.9rem' }}>Continue o cálculo</h3>
+              <ul className="ci-salindex__list">
+                {guide.related.map((r) => (
+                  <li key={r}>
+                    <Link href={`/${r}`}>
+                      {GUIDE_PAGES[r]
+                        ? GUIDE_PAGES[r].h1
+                        : `Salário R$ ${(SALARY_BY_SLUG[r] ?? 0).toLocaleString('pt-BR')}`}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -191,10 +213,10 @@ export default async function DynamicSlugPage({ params }: PageProps) {
       },
       {
         '@type': 'Question',
-        name: `Qual o desconto do INSS para um salário de R$ ${salary.toLocaleString('pt-BR')}?`,
+        name: `Quanto fica o salário líquido de R$ ${salary.toLocaleString('pt-BR')} em 2026?`,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: `A tabela progressiva do INSS de 2026 desconta ${formatBRL(calc.inssDeduction)} sobre um salário bruto de ${formatBRL(salary)}, resultando em base de cálculo de ${formatBRL(calc.taxableIncome)} para o IRRF.`,
+          text: `${formatBRL(calc.netSalary2026)} por mês. Sobre o bruto de ${formatBRL(salary)} incidem ${formatBRL(calc.inssDeduction)} de INSS e ${formatBRL(calc.newTax)} de IRRF, sobre uma base de cálculo de ${formatBRL(calc.taxableIncome)}. Descontos que variam por empregador — plano de saúde, vale-transporte, contribuição sindical — não estão incluídos.`,
         },
       },
       {
@@ -255,8 +277,17 @@ export default async function DynamicSlugPage({ params }: PageProps) {
             <TrustBanner />
           </div>
 
-          {/* Quick Summary Cards */}
-          <div className="grid-3" style={{ marginBottom: '2rem' }}>
+          {/* Quick Summary Cards. Net pay comes first: "quanto sobra" is the
+              question behind the query, and it was the one number the page did
+              not previously show. */}
+          <div className="grid-4" style={{ marginBottom: '2rem' }}>
+            <div className="card" style={{ textAlign: 'center', borderColor: 'var(--color-brand-accent)' }}>
+              <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', fontWeight: 700 }}>SALÁRIO LÍQUIDO</span>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--color-brand-primary)', marginTop: '0.25rem' }}>
+                {formatBRL(calc.netSalary2026)} <span style={{ fontSize: '0.8rem' }}>/mês</span>
+              </div>
+              <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)' }}>após INSS e IRRF</span>
+            </div>
             <div className="card" style={{ textAlign: 'center' }}>
               <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', fontWeight: 700 }}>IMPOSTO ANTERIOR</span>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#dc2626', marginTop: '0.25rem' }}>
@@ -320,6 +351,12 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 )}
               </li>
               <li>
+                <strong>Salário líquido em 2026:</strong> descontados o INSS de {formatBRL(calc.inssDeduction)} e o
+                IRRF de {formatBRL(calc.newTax)}, restam <strong>{formatBRL(calc.netSalary2026)}</strong> por mês —
+                contra {formatBRL(calc.netSalary2025)} pela regra de 2025. Não estão incluídos descontos que variam por
+                empregador, como plano de saúde, vale-transporte ou contribuição sindical.
+              </li>
+              <li>
                 <strong>Diferença no bolso:</strong>{' '}
                 {calc.monthlySaving > 0 ? (
                   <>
@@ -368,6 +405,24 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 </li>
               ))}
             </ul>
+
+            {/* The three pages that explain the numbers this page just showed:
+                where the base comes from, how the retention is assessed, and how
+                dependents change it. */}
+            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--linha)' }}>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}>
+                Entenda cada número deste cálculo
+              </h4>
+              <ul className="ci-salindex__list">
+                {['base-de-calculo-irrf', 'calculadora-irrf-2026', 'imposto-de-renda-com-dependentes', 'desconto-imposto-de-renda-no-salario'].map(
+                  (g) => (
+                    <li key={g}>
+                      <Link href={`/${g}`}>{GUIDE_PAGES[g].h1}</Link>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
           </section>
         </div>
       </div>

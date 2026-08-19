@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { SALARY_VALUES, salarySlug } from '@/data/salary-pages';
+import { GUIDE_SLUGS } from '@/data/guide-pages';
 
 // Derived at build time so a redeploy always re-dates the sitemap; a frozen string
 // tells crawlers nothing ever changes and suppresses re-crawl.
@@ -15,12 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: s >= 5000 && s <= 8000 ? 0.9 : 0.8,
   }));
 
-  const guideEntries: MetadataRoute.Sitemap = [
-    'nova-tabela-imposto-de-renda-2026',
-    'isencao-imposto-de-renda-2026',
-    'calculadora-irrf-2026',
-    'quanto-vou-economizar-imposto-de-renda-2026',
-  ].map((slug) => ({
+  const guideEntries: MetadataRoute.Sitemap = GUIDE_SLUGS.map((slug) => ({
     url: `${baseUrl}/${slug}`,
     lastModified: LAST_MODIFIED,
     changeFrequency: 'weekly',

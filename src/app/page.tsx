@@ -3,11 +3,12 @@ import Image from 'next/image';
 import Calculator from '@/components/Calculator';
 import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
 import { FEATURED_SALARY_EXAMPLES, SALARY_BANDS, salarySlug } from '@/data/salary-pages';
+import { GUIDE_PAGES, GUIDE_SLUGS } from '@/data/guide-pages';
 
 export const metadata = {
-  title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
+  title: 'Calculadora e Simulador de Imposto de Renda 2026 — IRRF Mensal',
   description:
-    'Informe seu salário mensal e compare quanto pagava antes e quanto paga agora com a nova tabela do Imposto de Renda 2026 (Lei nº 15.270/2025). Isenção até R$ 5.000.',
+    'Simulador do IRRF mensal de 2026: informe o salário bruto e veja o imposto retido, o salário líquido e quanto muda em relação à tabela de 2025. Isenção até R$ 5.000.',
   alternates: { canonical: 'https://calculadorair.online' },
   openGraph: {
     title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
@@ -17,29 +18,14 @@ export const metadata = {
   },
 };
 
-/** Every guide card below points at a route that exists. NO ROUTE = NO CARD. */
-const GUIDES = [
-  {
-    href: '/nova-tabela-imposto-de-renda-2026',
-    title: 'Nova tabela do IR 2026',
-    desc: 'As faixas, alíquotas e parcelas a deduzir que passam a valer em 2026.',
-  },
-  {
-    href: '/isencao-imposto-de-renda-2026',
-    title: 'Isenção até R$ 5.000',
-    desc: 'Quem deixa de ter retenção na fonte e por que o redutor zera o imposto.',
-  },
-  {
-    href: '/calculadora-irrf-2026',
-    title: 'Como o IRRF é calculado',
-    desc: 'Do salário bruto ao imposto retido, passo a passo, com o INSS de 2026.',
-  },
-  {
-    href: '/quanto-vou-economizar-imposto-de-renda-2026',
-    title: 'Quanto você economiza',
-    desc: 'O método de comparação entre a regra de 2025 e a de 2026.',
-  },
-];
+/** Cards are generated from the guide data, so a card can never point at a route
+    that does not exist and a new guide is reachable from the homepage the moment
+    it is added. */
+const GUIDES = GUIDE_SLUGS.map((slug) => ({
+  href: `/${slug}`,
+  title: GUIDE_PAGES[slug].h1,
+  desc: GUIDE_PAGES[slug].lead,
+}));
 
 const STEPS = [
   {
@@ -293,7 +279,7 @@ export default function HomePage() {
         <div className="ci-shell">
           <div className="ci-head">
             <h2 className="ci-h2">Entenda a reforma</h2>
-            <p className="ci-sub">Quatro guias sobre as regras que a calculadora aplica.</p>
+            <p className="ci-sub">As regras que a calculadora aplica, e os cálculos vizinhos ao IRRF mensal.</p>
           </div>
 
           <div className="ci-grid-2">

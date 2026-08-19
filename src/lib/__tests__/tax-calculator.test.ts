@@ -221,3 +221,27 @@ describe('Homepage salary cards — single source of truth', () => {
     }
   });
 });
+
+describe('netSalary', () => {
+  it('is gross minus INSS minus the 2026 IRRF', () => {
+    for (const gross of [3000, 5000, 6300, 7350, 12000, 30000]) {
+      const c = calculateTaxComparison(gross);
+      expect(c.netSalary2026).toBeCloseTo(gross - c.inssDeduction - c.newTax, 2);
+      expect(c.netSalary2025).toBeCloseTo(gross - c.inssDeduction - c.oldTax, 2);
+    }
+  });
+
+  it('leaves more in hand under 2026 wherever the reform reduces the tax', () => {
+    for (const gross of [5100, 6000, 7000]) {
+      const c = calculateTaxComparison(gross);
+      expect(c.monthlySaving).toBeGreaterThan(0);
+      expect(c.netSalary2026 - c.netSalary2025).toBeCloseTo(c.monthlySaving, 2);
+    }
+  });
+
+  it('below the exemption threshold the net is just gross minus INSS', () => {
+    const c = calculateTaxComparison(4000);
+    expect(c.newTax).toBe(0);
+    expect(c.netSalary2026).toBeCloseTo(4000 - c.inssDeduction, 2);
+  });
+});

@@ -40,6 +40,16 @@ export interface TaxCalculationResult {
   /** Redutor applied in 2026, computed on rendimentos tributáveis and capped at the tax. */
   reducerAmount: number;
 
+  /**
+   * Take-home pay after INSS and the 2026 IRRF — gross minus both withholdings.
+   * It excludes anything the calculator cannot know (FGTS is not withheld from
+   * the employee, and health-plan or union dues vary by employer), so it is the
+   * statutory net, not the exact payslip line.
+   */
+  netSalary2026: number;
+  /** The same figure under the 2025 rules, for the side-by-side. */
+  netSalary2025: number;
+
   // Savings
   monthlySaving: number;
   annualSaving12Months: number;
@@ -235,6 +245,8 @@ export function calculateTaxComparison(
     newEffectiveRate,
     taxBeforeRedutor,
     reducerAmount,
+    netSalary2026: round2(validSalary - inssDeduction - newTax),
+    netSalary2025: round2(validSalary - inssDeduction - oldTax),
     monthlySaving,
     annualSaving12Months,
     annualSaving13Months,
