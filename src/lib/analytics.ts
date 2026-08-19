@@ -20,6 +20,11 @@ export interface SalaryPageViewParams {
 
 export interface CommercialCtaParams {
   offerState: 'live' | 'waiting_for_offer';
+  /** Non-personal click identifier, the key a partner settles against. */
+  subId?: string;
+  /** Which of the 2026 bands the visitor was looking at when they clicked. */
+  salaryBand?: string;
+  commercialModel?: string;
   landingPage: string;
   destinationHost?: string;
 }
@@ -114,7 +119,10 @@ export const analytics = {
   trackCommercialCtaView: (p: CommercialCtaParams) => {
     if (typeof window !== 'undefined') {
       sendEvent('commercial_cta_view', {
-        ...BASE, offer_state: p.offerState, landing_page: p.landingPage,
+        ...BASE,
+        offer_state: p.offerState,
+        landing_page: p.landingPage,
+        salary_band: p.salaryBand,
       });
     }
   },
@@ -122,11 +130,24 @@ export const analytics = {
   trackCommercialCtaClick: (p: CommercialCtaParams) => {
     if (typeof window !== 'undefined') {
       sendEvent('commercial_cta_click', {
-        ...BASE, offer_state: p.offerState, landing_page: p.landingPage,
+        ...BASE,
+        offer_state: p.offerState,
+        landing_page: p.landingPage,
+        sub_id: p.subId,
+        salary_band: p.salaryBand,
+        commercial_model: p.commercialModel,
       });
       if (p.destinationHost) {
+        // Emitted only when the click actually leaves the site. A click on a
+        // disabled CTA is demand measurement, not a redirect, and must not be
+        // counted as one.
         sendEvent('affiliate_redirect', {
-          ...BASE, landing_page: p.landingPage, destination_host: p.destinationHost,
+          ...BASE,
+          landing_page: p.landingPage,
+          destination_host: p.destinationHost,
+          sub_id: p.subId,
+          salary_band: p.salaryBand,
+          commercial_model: p.commercialModel,
         });
       }
     }

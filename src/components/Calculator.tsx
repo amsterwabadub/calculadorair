@@ -210,7 +210,10 @@ export default function Calculator({ initialSalary = 6000, autoFocus = false }: 
           </div>
         </div>
 
-        <CommercialCTA landingPage={typeof window === 'undefined' ? '' : window.location.pathname} />
+        <CommercialCTA
+          landingPage={typeof window === 'undefined' ? '' : window.location.pathname}
+          salary={parsedSalary > 0 ? parsedSalary : undefined}
+        />
 
         <details className="ci-break">
           <summary>Ver o cálculo passo a passo</summary>

@@ -15,6 +15,14 @@ export interface MarketOffer {
   label: string;
   blurb: string;
   pendingNote: string;
+  /**
+   * Query parameter the partner reads the sub-id from. Networks disagree —
+   * subid, sub_id, aff_sub, utm_content — so this is configuration rather than
+   * a constant, and signing a partner should not require a code change.
+   */
+  subIdParam: string;
+  /** Recorded on every click so the analytics can be read without the contract. */
+  commercialModel: 'cpl' | 'cpa' | 'revshare' | 'none';
 }
 
 export const BRAZIL_OFFER: MarketOffer = {
@@ -24,4 +32,6 @@ export const BRAZIL_OFFER: MarketOffer = {
   blurb: 'Precisa de ajuda com a declaração ou com um caso mais complexo?',
   pendingNote:
     'Ainda estamos avaliando parceiros contábeis verificados. Nenhuma recomendação está disponível no momento.',
+  subIdParam: 'subid',
+  commercialModel: 'none',
 };
