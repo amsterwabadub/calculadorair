@@ -31,6 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      // Citable reference asset: tables, formula, sources and an embeddable tool.
+      url: `${baseUrl}/metodologia`,
+      lastModified: LAST_MODIFIED,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/contador`,
       lastModified: LAST_MODIFIED,
       changeFrequency: 'monthly',
