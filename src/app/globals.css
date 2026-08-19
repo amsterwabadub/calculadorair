@@ -530,3 +530,17 @@ h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 .ci-commercial__btn--pending { background: #fff; color: var(--verde-cerrado);
   border: 1px solid var(--color-emerald-border); }
 .ci-commercial__pending { margin-top: 9px; font-size: .74rem; color: var(--concreto); opacity: .9; }
+
+/* ---------------------------------------------- full salary index (homepage) */
+.ci-salindex { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--linha); }
+.ci-salindex__title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; color: var(--verde-mata); }
+.ci-salindex__sub { color: var(--color-text-muted); font-size: .95rem; margin: 6px 0 20px; max-width: 62ch; }
+.ci-salindex__band + .ci-salindex__band { margin-top: 22px; }
+.ci-salindex__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.ci-salindex__head strong { font-size: .95rem; color: var(--verde-mata); }
+.ci-salindex__head span { font-size: .82rem; color: var(--color-text-muted); }
+.ci-salindex__list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+.ci-salindex__list a { display: inline-block; padding: 6px 12px; border: 1px solid var(--linha);
+  border-radius: 999px; background: #fff; font-size: .88rem; font-variant-numeric: tabular-nums;
+  color: var(--verde-mata); text-decoration: none; transition: border-color .15s, background .15s; }
+.ci-salindex__list a:hover { border-color: var(--color-emerald-border); background: var(--color-emerald-bg); text-decoration: none; }

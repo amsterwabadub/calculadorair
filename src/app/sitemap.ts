@@ -1,7 +1,9 @@
 import { MetadataRoute } from 'next';
 import { SALARY_VALUES, salarySlug } from '@/data/salary-pages';
 
-const LAST_MODIFIED = new Date('2026-08-11');
+// Derived at build time so a redeploy always re-dates the sitemap; a frozen string
+// tells crawlers nothing ever changes and suppresses re-crawl.
+const LAST_MODIFIED = new Date();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://calculadorair.online';

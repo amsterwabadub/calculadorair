@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Calculator from '@/components/Calculator';
 import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
-import { FEATURED_SALARY_EXAMPLES } from '@/data/salary-pages';
+import { FEATURED_SALARY_EXAMPLES, SALARY_BANDS, salarySlug } from '@/data/salary-pages';
 
 export const metadata = {
   title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
@@ -256,6 +256,33 @@ export default function HomePage() {
                   Ver cálculo completo →
                 </span>
               </Link>
+            ))}
+          </div>
+
+          {/* Full index. Google reaches every salary route from the root in one
+              hop — the six cards above only ever exposed six of them, and the
+              rest were sitting in the sitemap uncrawled. */}
+          <div className="ci-salindex">
+            <h3 className="ci-salindex__title">Todas as faixas simuladas</h3>
+            <p className="ci-salindex__sub">
+              Cada link abre o cálculo completo daquele salário: INSS, base de cálculo, redutor da
+              Lei nº 15.270/2025 e a diferença mensal em relação à tabela de 2025.
+            </p>
+
+            {SALARY_BANDS.map((band) => (
+              <div className="ci-salindex__band" key={band.label}>
+                <div className="ci-salindex__head">
+                  <strong>{band.label}</strong>
+                  <span>{band.hint}</span>
+                </div>
+                <ul className="ci-salindex__list">
+                  {band.values.map((v) => (
+                    <li key={v}>
+                      <Link href={`/${salarySlug(v)}`}>R$ {v.toLocaleString('pt-BR')}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </div>

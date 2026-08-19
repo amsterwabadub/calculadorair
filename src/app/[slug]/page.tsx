@@ -63,10 +63,14 @@ export async function generateMetadata({ params }: PageProps) {
   if (salaryFromSlug !== undefined) {
     const salary = salaryFromSlug;
     const calc = calculateTaxComparison(salary);
-    const savingText = calc.monthlySaving > 0 ? `Economia de ${formatBRL(calc.monthlySaving)}/mês` : 'Cálculo completo 2026';
-
-    const pageTitle = `Imposto de Renda para Salário de R$ ${salary.toLocaleString('pt-BR')} em 2026 — ${savingText}`;
-    const pageDesc = `Quem ganha R$ ${salary.toLocaleString('pt-BR')} paga quanto de Imposto de Renda em 2026? Imposto anterior: ${formatBRL(calc.oldTax)}. Novo imposto: ${formatBRL(calc.newTax)}. Economia anual: ${formatBRL(calc.annualSaving12Months)}.`;
+    // The title mirrors how the query is actually typed ("quem ganha X paga quanto
+    // de imposto de renda") and puts the computed answer in the SERP snippet itself,
+    // so the result is useful before the click.
+    const pageTitle = `Quem ganha R$ ${salary.toLocaleString('pt-BR')} paga quanto de IR em 2026? ${formatBRL(calc.newTax)}/mês`;
+    const pageDesc =
+      calc.monthlySaving > 0
+        ? `Salário de R$ ${salary.toLocaleString('pt-BR')}: o IRRF em 2026 é de ${formatBRL(calc.newTax)}/mês, contra ${formatBRL(calc.oldTax)} pela tabela de 2025 — ${formatBRL(calc.monthlySaving)} a menos por mês e ${formatBRL(calc.annualSaving12Months)} no ano. Veja o cálculo passo a passo com INSS e redutor.`
+        : `Salário de R$ ${salary.toLocaleString('pt-BR')}: o IRRF em 2026 é de ${formatBRL(calc.newTax)}/mês. Veja o cálculo passo a passo, com o desconto do INSS de ${formatBRL(calc.inssDeduction)} e a base de cálculo aplicada.`;
 
     return {
       title: pageTitle,
@@ -163,6 +167,50 @@ export default async function DynamicSlugPage({ params }: PageProps) {
   const prevSalary = currentIndex > 0 ? SALARY_LIST[currentIndex - 1] : null;
   const nextSalary = currentIndex < SALARY_LIST.length - 1 ? SALARY_LIST[currentIndex + 1] : null;
 
+  // A wider neighbourhood, not just prev/next: someone searching for R$ 6.300 is
+  // one mistyped digit away from R$ 6.200, and a two-link page leaves most of the
+  // set unreachable from any single route.
+  const nearby = SALARY_LIST.filter(
+    (s) => s !== salary && Math.abs(SALARY_LIST.indexOf(s) - currentIndex) <= 4,
+  );
+
+  const isento = calc.newTax === 0;
+  const jsonLdFaq = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `Quem ganha R$ ${salary.toLocaleString('pt-BR')} paga quanto de Imposto de Renda em 2026?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: isento
+            ? `Nada. Com salário bruto de ${formatBRL(salary)}, o redutor da Lei nº 15.270/2025 anula todo o imposto apurado e o IRRF retido na fonte fica em R$ 0,00 por mês.`
+            : `${formatBRL(calc.newTax)} por mês de IRRF, o que corresponde a uma alíquota efetiva de ${calc.newEffectiveRate}% sobre o salário bruto de ${formatBRL(salary)}.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `Qual o desconto do INSS para um salário de R$ ${salary.toLocaleString('pt-BR')}?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `A tabela progressiva do INSS de 2026 desconta ${formatBRL(calc.inssDeduction)} sobre um salário bruto de ${formatBRL(salary)}, resultando em base de cálculo de ${formatBRL(calc.taxableIncome)} para o IRRF.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `Quanto quem ganha R$ ${salary.toLocaleString('pt-BR')} economiza com a nova regra de 2026?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text:
+            calc.monthlySaving > 0
+              ? `${formatBRL(calc.monthlySaving)} por mês — pela tabela de 2025 o imposto seria ${formatBRL(calc.oldTax)} e pela de 2026 é ${formatBRL(calc.newTax)}. No ano são ${formatBRL(calc.annualSaving12Months)}.`
+              : `Nesta faixa salarial as regras de 2025 e 2026 resultam no mesmo imposto de ${formatBRL(calc.newTax)} por mês.`,
+        },
+      },
+    ],
+  };
+
   const jsonLdBreadcrumb = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -177,6 +225,10 @@ export default async function DynamicSlugPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
 
       <div style={{ padding: '2rem 0' }}>
@@ -308,6 +360,14 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 <span />
               )}
             </div>
+
+            <ul className="ci-salindex__list" style={{ marginTop: '1.25rem' }}>
+              {nearby.map((s) => (
+                <li key={s}>
+                  <Link href={`/${salarySlug(s)}`}>R$ {s.toLocaleString('pt-BR')}</Link>
+                </li>
+              ))}
+            </ul>
           </section>
         </div>
       </div>
