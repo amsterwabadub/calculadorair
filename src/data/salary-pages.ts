@@ -123,3 +123,52 @@ export function buildSalaryExample(salary: number): SalaryExample {
 
 export const FEATURED_SALARY_EXAMPLES: SalaryExample[] =
   FEATURED_SALARIES.map(buildSalaryExample);
+
+/* ------------------------------------------------------------------ page-1 sprint
+
+   A side-by-side 2025 vs 2026 table for the homepage.
+
+   None of the pages currently holding page 1 for "calculadora imposto de renda"
+   (Receita, DIEESE, Brasilprev, eCálculos, InvestNews, Contábeis, Siprovel,
+   UNIFEBE, TranspNet, Poder360) publishes the two regimes next to each other with
+   the net salary. They return a single number for a single salary. This table is
+   the one thing on the page a visitor cannot get from any of them, and it is the
+   reason to prefer this result over the ten above it.
+
+   Every cell is produced by the same engine that powers the calculator, so the
+   table cannot drift away from what the tool computes. */
+export interface ComparisonRow {
+  salary: number;
+  label: string;
+  slug: string;
+  inss: string;
+  oldTax: string;
+  newTax: string;
+  saving: string;
+  netSalary: string;
+  ruleLabel: string;
+}
+
+/** Rounded, recognisable salaries that span the three benefit zones. */
+const COMPARISON_SALARIES: readonly number[] = [3000, 4000, 5000, 6000, 7000, 7350, 8000, 10000, 15000];
+
+export const COMPARISON_ROWS: ComparisonRow[] = COMPARISON_SALARIES.map((salary) => {
+  const c = calculateTaxComparison(salary);
+  const zone =
+    c.benefitType === 'ISENTO_TOTAL'
+      ? 'Isento na fonte'
+      : c.benefitType === 'REDUCAO_PARCIAL'
+        ? 'Redutor parcial'
+        : 'Tabela progressiva';
+  return {
+    salary,
+    label: `R$ ${salary.toLocaleString('pt-BR')}`,
+    slug: salarySlug(salary),
+    inss: formatBRL(c.inssDeduction),
+    oldTax: formatBRL(c.oldTax),
+    newTax: formatBRL(c.newTax),
+    saving: c.monthlySaving > 0 ? `+ ${formatBRL(c.monthlySaving)}` : '—',
+    netSalary: formatBRL(c.netSalary2026),
+    ruleLabel: zone,
+  };
+});

@@ -9,6 +9,23 @@ const nextConfig = {
         destination: 'https://calculadorair.online/:path*',
         permanent: true,
       },
+      // ---------------------------------------------------------------- 2026-08-20
+      // Page-1 sprint. Three URLs were competing for one intent: the homepage
+      // calculator, /calculadora-irrf-2026 and /calculo-ir-mensal. Search Console
+      // showed the homepage — not the dedicated guides — taking the impressions for
+      // "calculo ir mensal" (pos 46) and "calculadora do ir" (pos 48), which is what
+      // cannibalisation looks like from the outside. The homepage is the tool, so it
+      // keeps the intent and the two guides fold into it.
+      {
+        source: '/calculadora-irrf-2026',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/calculo-ir-mensal',
+        destination: '/',
+        permanent: true,
+      },
       // Salary amounts retired on 2026-08-19. Google autocomplete suggests all of
       // them, but running the 2026 engine across the range shows they resolve to
       // an answer a kept page already gives: R$ 0,00 below the exemption, and an

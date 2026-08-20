@@ -128,43 +128,6 @@ export const GUIDE_PAGES: Record<string, GuidePage> = {
     related: ['nova-tabela-imposto-de-renda-2026', 'imposto-de-renda-salario-5000', 'imposto-de-renda-salario-5500'],
   },
 
-  'calculadora-irrf-2026': {
-    title: 'Calculadora IRRF 2026 — Simulador do Imposto Retido na Fonte',
-    description: 'Simulador do IRRF mensal com a tabela de 2026, INSS progressivo, dependentes e o redutor da Lei nº 15.270/2025. Resultado imediato, sem cadastro.',
-    h1: 'Calculadora de IRRF 2026',
-    lead: 'Informe o salário bruto e veja o imposto retido na fonte, a base de cálculo, o redutor aplicado e quanto sobra líquido — pela regra que vale desde janeiro de 2026.',
-    sections: [
-      {
-        h2: 'A ordem exata do cálculo',
-        paragraphs: [
-          'Um IRRF errado quase sempre vem de trocar a ordem das etapas. Esta é a sequência que a calculadora segue:',
-        ],
-        list: [
-          { term: 'INSS progressivo', detail: `Aplicado faixa a faixa sobre o bruto, com teto de contribuição em ${brl(8475.55)}. Em ${brl(6000)} o desconto é ${brl(at(6000).inssDeduction)}.` },
-          { term: 'Base de cálculo', detail: `A maior entre (bruto − INSS − dependentes) e (bruto − desconto simplificado de ${brl(R.simplifiedMonthlyDiscount)}).` },
-          { term: 'Tabela progressiva 2026', detail: 'Roda sobre a base de cálculo, com isenção até R$ 2.428,80 e alíquotas de 7,5% a 27,5%.' },
-          { term: 'Redutor', detail: 'Calculado sobre os rendimentos tributáveis, não sobre a base, e subtraído do imposto apurado sem nunca ultrapassá-lo.' },
-        ],
-      },
-      {
-        h2: 'IRRF mensal não é a declaração anual',
-        paragraphs: [
-          'Esta ferramenta calcula a retenção de um mês sobre um salário CLT. Ela não apura imposto devido anual, não considera outras fontes de renda, despesas médicas ou educação, e não estima restituição — esses cálculos pertencem à Declaração de Ajuste Anual e usam bases diferentes.',
-        ],
-      },
-    ],
-    faq: [
-      {
-        q: 'A calculadora de IRRF considera o desconto do INSS?',
-        a: `Sim, pela tabela progressiva do INSS de 2026, com teto de ${brl(8475.55)}, e compara o resultado com o desconto simplificado de ${brl(R.simplifiedMonthlyDiscount)} para adotar o que for mais vantajoso.`,
-      },
-      {
-        q: 'Serve para calcular a restituição?',
-        a: 'Não. Ela simula apenas o IRRF mensal sobre um salário CLT. Imposto devido anual e restituição fazem parte da Declaração de Ajuste Anual.',
-      },
-    ],
-    related: ['base-de-calculo-irrf', 'calculo-ir-mensal', 'nova-tabela-imposto-de-renda-2026'],
-  },
 
   'quanto-vou-economizar-imposto-de-renda-2026': {
     title: 'Quanto Vou Economizar com o Novo Imposto de Renda 2026',
@@ -203,38 +166,6 @@ export const GUIDE_PAGES: Record<string, GuidePage> = {
   // Added 2026-08-19 from queries Search Console already shows the domain
   // receiving, all of which currently land on the homepage at position 46-90.
 
-  'calculo-ir-mensal': {
-    title: 'Cálculo do IR Mensal — Quanto é Descontado Todo Mês em 2026',
-    description: 'O Imposto de Renda mensal descontado no contracheque é o IRRF, e não o imposto da declaração anual. Veja como ele é calculado em 2026 e quanto cai por mês.',
-    h1: 'Cálculo do Imposto de Renda mensal',
-    lead: 'O desconto que aparece todo mês no contracheque é o IRRF — retenção na fonte. É um cálculo diferente do que você faz uma vez por ano na declaração, e é este que a página calcula.',
-    sections: [
-      {
-        h2: 'Mensal e anual são cálculos distintos',
-        paragraphs: [
-          'O IRRF mensal olha para um mês isolado: um salário, o INSS daquele mês, os dependentes, a tabela e o redutor. A Declaração de Ajuste Anual olha para o ano inteiro e para tudo que o mês não vê — outras fontes pagadoras, despesas médicas, educação, previdência privada, dependentes que entraram ou saíram.',
-          'É por isso que existe restituição: o que foi retido mês a mês raramente coincide com o imposto realmente devido no ano, e o ajuste acerta a diferença.',
-        ],
-      },
-      {
-        h2: 'Quanto cai por mês, na prática',
-        paragraphs: [
-          `Em ${brl(5000)}, nada: ${brl(at(5000).newTax)}. Em ${brl(6000)}, ${brl(at(6000).newTax)} por mês. Em ${brl(8000)}, ${brl(at(8000).newTax)}. Em ${brl(12000)}, ${brl(at(12000).newTax)}. O líquido correspondente, já sem INSS e sem IRRF, é ${brl(at(6000).netSalary2026)}, ${brl(at(8000).netSalary2026)} e ${brl(at(12000).netSalary2026)}.`,
-        ],
-      },
-    ],
-    faq: [
-      {
-        q: 'O desconto mensal do imposto de renda é o mesmo da declaração?',
-        a: 'Não. O desconto mensal é o IRRF retido na fonte sobre o salário daquele mês. A declaração anual apura o imposto devido no ano inteiro considerando todas as rendas e deduções, e a diferença entre os dois é o que vira restituição ou imposto a pagar.',
-      },
-      {
-        q: 'Por que o IR descontado muda de um mês para outro?',
-        a: 'Porque a base muda: horas extras, adicionais, mudança no número de dependentes ou no valor do INSS alteram o cálculo daquele mês, ainda que o salário-base seja o mesmo.',
-      },
-    ],
-    related: ['calculadora-irrf-2026', 'desconto-imposto-de-renda-no-salario', 'base-de-calculo-irrf'],
-  },
 
   'base-de-calculo-irrf': {
     title: 'Base de Cálculo do IRRF 2026 — O Que É e Como Chegar Nela',

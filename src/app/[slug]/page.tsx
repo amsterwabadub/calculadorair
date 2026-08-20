@@ -414,7 +414,7 @@ export default async function DynamicSlugPage({ params }: PageProps) {
                 Entenda cada número deste cálculo
               </h4>
               <ul className="ci-salindex__list">
-                {['base-de-calculo-irrf', 'calculadora-irrf-2026', 'imposto-de-renda-com-dependentes', 'desconto-imposto-de-renda-no-salario'].map(
+                {['base-de-calculo-irrf', 'imposto-de-renda-com-dependentes', 'desconto-imposto-de-renda-no-salario'].map(
                   (g) => (
                     <li key={g}>
                       <Link href={`/${g}`}>{GUIDE_PAGES[g].h1}</Link>

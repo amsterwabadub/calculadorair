@@ -2,13 +2,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Calculator from '@/components/Calculator';
 import { TAX_RULES_2026 } from '@/data/tax-rules-2026';
-import { FEATURED_SALARY_EXAMPLES, SALARY_BANDS, salarySlug } from '@/data/salary-pages';
+import { COMPARISON_ROWS, FEATURED_SALARY_EXAMPLES, SALARY_BANDS, salarySlug } from '@/data/salary-pages';
 import { GUIDE_PAGES, GUIDE_SLUGS } from '@/data/guide-pages';
 
 export const metadata = {
-  title: 'Calculadora e Simulador de Imposto de Renda 2026 — IRRF Mensal',
+  // Engineered against the live page-1 titles for "calculadora imposto de renda"
+  // (BR/pt, 2026-08-20). Receita, DIEESE, Brasilprev, eCálculos and InvestNews all
+  // lead with the tool noun; none of them promise the 2025-vs-2026 comparison or the
+  // net salary, so that is what this title carries as the differentiator.
+  title: 'Calculadora de Imposto de Renda 2026 — IRRF e Salário Líquido',
   description:
-    'Simulador do IRRF mensal de 2026: informe o salário bruto e veja o imposto retido, o salário líquido e quanto muda em relação à tabela de 2025. Isenção até R$ 5.000.',
+    'Calculadora de Imposto de Renda 2026: informe o salário bruto e veja na hora o IRRF retido, o salário líquido e quanto você paga a menos que pela tabela de 2025. Grátis, sem cadastro, com INSS e dependentes.',
   alternates: { canonical: 'https://calculadorair.online' },
   openGraph: {
     title: 'Calculadora Imposto de Renda 2026 — Veja Quanto Você Economiza',
@@ -91,6 +95,23 @@ const FAQS = [
     q: 'Esta calculadora serve para a declaração anual ou para a restituição?',
     a: 'Não. Esta ferramenta simula exclusivamente o Imposto de Renda Retido na Fonte mensal sobre um salário CLT e o compara com a regra vigente até 2025. Ela não calcula a Declaração de Ajuste Anual, imposto devido anual nem valor de restituição.',
   },
+  /* The three questions below are not invented: they are the phrasings this page
+     already receives impressions for in Search Console (2026-08-12 → 2026-08-18),
+     written out as questions. "como calcular o desconto de imposto de renda",
+     "base de calculo do ir" and "quanto pagar de imposto de renda" were all live
+     queries against this URL, so answering them here is answering real demand. */
+  {
+    q: 'Como calcular o desconto do Imposto de Renda no salário?',
+    a: 'Em quatro passos. Primeiro desconte o INSS do salário bruto. Depois compare a soma das deduções legais (INSS mais R$ 189,59 por dependente) com o desconto simplificado de R$ 607,20 e use o maior dos dois: o que sobra é a base de cálculo. Aplique a tabela progressiva de 2026 sobre essa base para achar o imposto apurado. Por fim, se os rendimentos tributáveis forem de até R$ 7.350,00, subtraia o redutor da Lei nº 15.270/2025. O resultado é o IRRF descontado na folha. A calculadora no topo desta página executa exatamente esses quatro passos.',
+  },
+  {
+    q: 'O que é a base de cálculo do IR e como ela é encontrada?',
+    a: 'A base de cálculo é o valor sobre o qual a tabela progressiva incide — não é o salário bruto. Ela é o salário bruto menos a maior destas duas opções: as deduções legais (INSS do mês mais R$ 189,59 por dependente) ou o desconto simplificado de R$ 607,20. Atenção a um detalhe que confunde: o redutor de 2026 não usa a base de cálculo, e sim os rendimentos tributáveis, ou seja o salário tributável antes das deduções. São duas bases diferentes dentro do mesmo cálculo.',
+  },
+  {
+    q: 'Quanto se paga de Imposto de Renda por salário em 2026?',
+    a: `A tabela desta página traz o valor para nove salários. Como referência rápida: até R$ 5.000,00 não há retenção; em R$ ${(6000).toLocaleString('pt-BR')},00 o IRRF é ${COMPARISON_ROWS.find((r) => r.salary === 6000)?.newTax ?? '—'} contra ${COMPARISON_ROWS.find((r) => r.salary === 6000)?.oldTax ?? '—'} pela regra de 2025; e a partir de R$ 7.350,00 o redutor deixa de existir e vale a tabela progressiva de 2026. Para o seu valor exato, use a calculadora no topo da página.`,
+  },
 ];
 
 export default function HomePage() {
@@ -132,13 +153,19 @@ export default function HomePage() {
           <div className="ci-hero__copy">
             <p className="ci-eyebrow">Lei nº 15.270/2025 · vigente desde 1º/01/2026</p>
 
+            {/* The previous H1 ("Veja quanto o novo Imposto de Renda de 2026 deixa no
+                seu bolso") named neither the tool nor the tax. It framed the page as a
+                reform explainer while the query it needs to win — "calculadora imposto
+                de renda", 9.900/mês — is a tool query, and every page-1 result leads
+                with the tool noun. The benefit line moves to the lead, where it still
+                does its job without costing the page its topic. */}
             <h1 className="ci-h1">
-              Veja quanto o novo Imposto de Renda de&nbsp;2026 <em>deixa no seu bolso</em>
+              Calculadora de Imposto de&nbsp;Renda <em>2026</em>
             </h1>
 
             <p className="ci-lead">
-              Informe seu salário bruto e compare, lado a lado, o IRRF que você pagava pela tabela de
-              2025 e o que passa a pagar com a tabela e o redutor de 2026.
+              Informe o salário bruto e veja na hora o IRRF retido, o salário líquido e quanto o
+              novo Imposto de Renda deixa no seu bolso em relação à tabela de 2025. Sem cadastro.
             </p>
           </div>
 
@@ -187,6 +214,64 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* --------------------------------------------- 2025 vs 2026 table */}
+      <section className="ci-section" id="tabela-comparativa">
+        <div className="ci-shell">
+          <div className="ci-head">
+            <h2 className="ci-h2">Quanto se paga de IRRF por salário: 2025 x 2026</h2>
+            <p className="ci-sub">
+              O imposto retido na fonte pelas duas regras, lado a lado, com o INSS já descontado e o
+              salário líquido que sobra em 2026. Todos os valores são calculados pelo mesmo motor da
+              calculadora acima, para um trabalhador CLT sem dependentes.
+            </p>
+          </div>
+
+          <div className="ci-tablewrap">
+            <table className="ci-table">
+              <caption className="ci-table__caption">
+                IRRF mensal por faixa de salário bruto — tabela de 2025 comparada com a tabela e o
+                redutor de 2026 (Lei nº 15.270/2025).
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Salário bruto</th>
+                  <th scope="col">INSS</th>
+                  <th scope="col">IRRF 2025</th>
+                  <th scope="col">IRRF 2026</th>
+                  <th scope="col">Diferença/mês</th>
+                  <th scope="col">Líquido 2026</th>
+                  <th scope="col">Regra aplicada</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARISON_ROWS.map((row) => (
+                  <tr key={row.salary}>
+                    <th scope="row">
+                      <Link href={`/${row.slug}`}>{row.label}</Link>
+                    </th>
+                    <td>{row.inss}</td>
+                    <td>{row.oldTax}</td>
+                    <td>
+                      <strong>{row.newTax}</strong>
+                    </td>
+                    <td className={row.saving === '—' ? undefined : 'ci-table__save'}>{row.saving}</td>
+                    <td>{row.netSalary}</td>
+                    <td>{row.ruleLabel}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="ci-tablenote">
+            O INSS de 2026 é mantido nos dois lados da comparação, de modo que a coluna
+            &ldquo;Diferença/mês&rdquo; isole o efeito da reforma e não misture mudanças de
+            contribuição previdenciária. Parâmetros e fontes em{' '}
+            <Link href="/metodologia">metodologia</Link>.
+          </p>
         </div>
       </section>
 

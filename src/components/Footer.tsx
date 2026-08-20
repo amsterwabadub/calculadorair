@@ -27,11 +27,10 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', fontSize: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <li><Link href="/nova-tabela-imposto-de-renda-2026">Tabela IRRF 2026 Completa</Link></li>
               <li><Link href="/isencao-imposto-de-renda-2026">Regra de Isenção até R$ 5k</Link></li>
-              <li><Link href="/calculadora-irrf-2026">Calculadora IRRF Mensal</Link></li>
+              <li><Link href="/">Calculadora de Imposto de Renda 2026</Link></li>
               <li><Link href="/quanto-vou-economizar-imposto-de-renda-2026">Como Calcular sua Economia</Link></li>
               <li><Link href="/base-de-calculo-irrf">Base de Cálculo do IRRF</Link></li>
               <li><Link href="/desconto-imposto-de-renda-no-salario">Desconto de IR no Salário</Link></li>
-              <li><Link href="/calculo-ir-mensal">Cálculo do IR Mensal</Link></li>
               <li><Link href="/imposto-de-renda-com-dependentes">IR com Dependentes</Link></li>
               <li><Link href="/metodologia">Metodologia e Tabelas</Link></li>
               <li><Link href="/contador">Onde Buscar Ajuda</Link></li>
